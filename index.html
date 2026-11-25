@@ -1,0 +1,1923 @@
+<!DOCTYPE html>
+<html lang="id" class="scroll-smooth">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Dashboard Audit & Rekap Selisih Crewstore | Es Teler Sultan - Exodrinks</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.1/dist/chart.umd.min.js"></script>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+  <script>
+    tailwind.config = {
+      darkMode: 'media',
+      theme: {
+        extend: {
+          fontFamily: {
+            sans: ['Inter', 'sans-serif'],
+          },
+          colors: {
+            brand: {
+              50: '#faf5ff',
+              100: '#f3e8ff',
+              500: '#a855f7',
+              600: '#7e22ce',
+              700: '#6b21a8',
+              900: '#3b0764',
+            }
+          }
+        }
+      }
+    }
+  </script>
+  <style>
+    @media print {
+      .no-print { display: none !important; }
+      body { background: #fff !important; color: #000 !important; }
+      .print-break { page-break-inside: avoid; }
+    }
+    ::-webkit-scrollbar { width: 6px; height: 6px; }
+    ::-webkit-scrollbar-track { background: transparent; }
+    ::-webkit-scrollbar-thumb { background: rgba(168, 85, 247, 0.35); border-radius: 9999px; }
+    ::-webkit-scrollbar-thumb:hover { background: rgba(126, 34, 206, 0.6); }
+  </style>
+</head>
+<body class="bg-purple-50/40 text-slate-800 dark:bg-slate-950 dark:text-slate-100 font-sans antialiased selection:bg-purple-600 selection:text-white">
+
+  <!-- Toast Notification -->
+  <div id="toast" class="fixed bottom-5 right-5 z-50 hidden transform transition-all duration-300 translate-y-4 opacity-0 no-print">
+    <div class="flex items-center gap-3 bg-purple-950 dark:bg-slate-800 text-white px-4 py-3 rounded-2xl shadow-xl border border-purple-700/60 text-sm font-medium">
+      <span id="toast-icon" class="w-2.5 h-2.5 rounded-full bg-purple-400"></span>
+      <span id="toast-message">Pesan notifikasi</span>
+    </div>
+  </div>
+
+  <!-- Top Header -->
+  <header class="bg-white dark:bg-slate-900 border-b border-purple-100 dark:border-slate-800 no-print">
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-4 flex flex-col md:flex-row md:items-center md:justify-between gap-4">
+      <div class="flex items-center gap-4">
+        <!-- Logo SVG EXO drinks -->
+        <div class="px-3 py-1.5 rounded-2xl bg-white dark:bg-slate-100 border border-purple-200/80 shadow-sm shrink-0 flex items-center justify-center">
+          <svg class="h-11 w-auto" viewBox="0 0 210 96" fill="none" xmlns="http://www.w3.org/2000/svg" aria-label="EXO drinks Logo">
+            <!-- Huruf E -->
+            <path d="M12 14H46V21H24V30H42V36H24V46H47V53H12V14Z" fill="#46115B"/>
+            <!-- Huruf X -->
+            <path d="M53 14H66L75 29L84 14H95L80 34L97 53H84L74 39L64 53H52L69 34L53 14Z" fill="#46115B"/>
+            <!-- Huruf O (setengah penuh kiri, setengah garis kanan) -->
+            <path d="M121 14C109.954 14 101 22.73 101 33.5C101 44.27 109.954 53 121 53V14Z" fill="#46115B"/>
+            <circle cx="121" cy="33.5" r="18.2" stroke="#46115B" stroke-width="2.6"/>
+            <!-- Teks drinks -->
+            <text x="11" y="83" fill="#46115B" font-family="Georgia, 'Times New Roman', serif" font-weight="900" font-size="33" letter-spacing="0.5">drinks</text>
+            <!-- Gelas & Tutup Dome dengan Sedotan -->
+            <g transform="translate(145, 4)">
+              <!-- Sedotan -->
+              <path d="M12 8L26 5L29 18" stroke="#46115B" stroke-width="4" stroke-linecap="round" stroke-linejoin="round"/>
+              <!-- Tutup Dome -->
+              <path d="M12 28C14 19 22 15 31 15C40 15 47 20 49 27L12 31" stroke="#46115B" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"/>
+              <!-- Bibir Gelas -->
+              <rect x="9" y="34" width="44" height="6" rx="3" transform="rotate(9 9 34)" fill="#46115B"/>
+              <!-- Badan Gelas -->
+              <path d="M13 41L9 68C7.5 76 13 83 21 84.5L26 85.3C34 86.5 41 81 43 73L49 46" stroke="#46115B" stroke-width="3.5" stroke-linecap="round"/>
+              <!-- Isi Minuman Gelombang -->
+              <path d="M14 56C20 62 28 62 34 55C39 49 45 50 47 52L42 72C40.5 78 34.5 82 28 81L22 80C15.5 79 11.5 73 12.5 66.5L14 56Z" fill="#46115B"/>
+              <!-- Gelembung -->
+              <circle cx="20" cy="67" r="3" fill="#FFFFFF"/>
+              <circle cx="27" cy="72" r="1.8" fill="#FFFFFF"/>
+              <!-- Cipratan Kanan -->
+              <path d="M48 41C57 42 63 50 61 61C59 53 54 49 47 48Z" fill="#46115B"/>
+            </g>
+          </svg>
+        </div>
+        <div>
+          <div class="flex flex-wrap items-center gap-2">
+            <h1 class="text-lg sm:text-xl font-extrabold tracking-tight text-slate-900 dark:text-white">
+              ES TELER SULTAN <span class="text-purple-700 dark:text-purple-400">• EXO DRINKS</span>
+            </h1>
+            <span class="px-2.5 py-0.5 text-[11px] font-bold uppercase tracking-wider rounded-full bg-purple-100 text-purple-800 dark:bg-purple-950 dark:text-purple-300 border border-purple-200/80 dark:border-purple-800">
+              Audit & Rekap Selisih Kasir
+            </span>
+          </div>
+          <p class="text-xs sm:text-sm text-slate-500 dark:text-slate-400 mt-0.5">
+            Pantau selisih transaksi crewstore, performa tiap outlet, dan akar penyebab kesalahan dengan mudah
+          </p>
+        </div>
+      </div>
+
+      <!-- Header Action Buttons -->
+      <div class="flex flex-wrap items-center gap-2">
+        <button onclick="openOutletModal()" class="inline-flex items-center gap-1.5 px-3.5 py-2.5 rounded-xl bg-purple-50 hover:bg-purple-100 text-purple-800 dark:bg-purple-950/80 dark:hover:bg-purple-900 dark:text-purple-200 border border-purple-200/80 dark:border-purple-800 text-xs sm:text-sm font-semibold transition">
+          <svg class="w-4 h-4" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M19 21V5a2 2 0 00-2-2H7a2 2 0 00-2 2v16m14 0h2m-2 0h-5m-9 0H3m2 0h5M9 7h1m-1 4h1m4-4h1m-1 4h1m-5 10v-5a1 1 0 011-1h2a1 1 0 011 1v5m-4 0h4"/></svg>
+          + Buat Outlet
+        </button>
+        <button onclick="openAddModal()" class="inline-flex items-center gap-1.5 px-3.5 py-2.5 rounded-xl bg-purple-700 hover:bg-purple-800 text-white text-xs sm:text-sm font-semibold shadow-sm transition">
+          <svg class="w-4 h-4" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M12 4v16m8-8H4"/></svg>
+          Tambah Selisih
+        </button>
+        <button onclick="exportFilteredCSV()" class="inline-flex items-center gap-1.5 px-3.5 py-2.5 rounded-xl bg-slate-100 hover:bg-purple-50 dark:bg-slate-800 dark:hover:bg-slate-700 text-slate-700 dark:text-slate-200 text-xs sm:text-sm font-semibold transition">
+          <svg class="w-4 h-4" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-4l-4 4m0 0l-4-4m4 4V4"/></svg>
+          Export CSV
+        </button>
+        <button onclick="window.print()" class="inline-flex items-center gap-1.5 px-3 py-2.5 rounded-xl bg-slate-100 hover:bg-purple-50 dark:bg-slate-800 dark:hover:bg-slate-700 text-slate-700 dark:text-slate-200 text-xs sm:text-sm font-semibold transition" title="Cetak Laporan">
+          <svg class="w-4 h-4" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M17 17h2a2 2 0 002-2v-4a2 2 0 00-2-2H5a2 2 0 00-2 2v4a2 2 0 002 2h2m2 4h6a2 2 0 002-2v-4a2 2 0 00-2-2H9a2 2 0 00-2 2v4a2 2 0 002 2zm8-12V5a2 2 0 00-2-2H9a2 2 0 00-2 2v4h10z"/></svg>
+        </button>
+      </div>
+    </div>
+  </header>
+
+  <!-- EXECUTIVE QUICK SUMMARY BANNER -->
+  <section class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 pt-5">
+    <div class="rounded-3xl bg-gradient-to-br from-slate-950 via-purple-950 to-fuchsia-950 text-white p-5 sm:p-6 shadow-xl shadow-purple-950/15 border border-purple-800/40 flex flex-col lg:flex-row lg:items-center justify-between gap-5 relative overflow-hidden">
+      <div class="absolute -right-12 -top-12 w-48 h-48 rounded-full bg-purple-500/15 blur-2xl pointer-events-none"></div>
+      <div class="flex items-start gap-4 relative z-10">
+        <div class="w-11 h-11 rounded-2xl bg-purple-500/20 border border-purple-400/30 flex items-center justify-center shrink-0 mt-0.5">
+          <svg class="w-5 h-5 text-amber-300" fill="none" stroke="currentColor" stroke-width="2.2" viewBox="0 0 24 24">
+            <path stroke-linecap="round" stroke-linejoin="round" d="M13 10V3L4 14h7v7l9-11h-7z" />
+          </svg>
+        </div>
+        <div>
+          <div class="flex flex-wrap items-center gap-2">
+            <span class="text-[11px] font-bold uppercase tracking-wider bg-purple-500/30 text-purple-200 border border-purple-400/30 px-2.5 py-0.5 rounded-full">Kesimpulan Otomatis</span>
+            <span id="summary-period-label" class="text-xs text-purple-200/80 font-medium">Periode Januari – Desember 2026</span>
+          </div>
+          <p id="executive-headline" class="text-sm sm:text-base font-medium mt-2 leading-relaxed text-slate-100">
+            Memuat analisis ringkas operasional outlet...
+          </p>
+        </div>
+      </div>
+      <div class="grid grid-cols-2 sm:flex sm:flex-nowrap items-stretch gap-2.5 shrink-0 no-print relative z-10">
+        <div class="bg-white/10 backdrop-blur-md rounded-2xl px-4 py-2.5 border border-white/15 min-w-[155px]">
+          <span class="block text-[10px] font-semibold uppercase tracking-wider text-purple-200">Outlet Paling Sering Selisih</span>
+          <span id="highlight-top-outlet" class="text-sm sm:text-base font-extrabold text-white mt-0.5 block">-</span>
+        </div>
+        <div class="bg-white/10 backdrop-blur-md rounded-2xl px-4 py-2.5 border border-white/15 min-w-[175px]">
+          <span class="block text-[10px] font-semibold uppercase tracking-wider text-purple-200">Penyebab Utama</span>
+          <span id="highlight-top-cat" class="text-sm sm:text-base font-extrabold text-amber-300 mt-0.5 block">-</span>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Sticky Global Filter Bar -->
+  <section class="sticky top-0 z-30 bg-white/95 dark:bg-slate-900/95 backdrop-blur border-b border-purple-100 dark:border-slate-800 shadow-sm no-print mt-4">
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-3">
+      <!-- Quick Filter Chips + Panduan Singkat -->
+      <div class="flex flex-wrap items-center justify-between gap-2 pb-3 mb-3 border-b border-purple-100/70 dark:border-slate-800/80">
+        <div class="flex flex-wrap items-center gap-1.5">
+          <span class="text-[11px] font-bold uppercase tracking-wider text-slate-400 mr-1">Filter Cepat:</span>
+          <button type="button" onclick="applyQuickPreset('ALL')" data-preset="ALL" class="quick-chip px-3 py-1 rounded-full text-xs font-semibold bg-purple-700 text-white shadow-sm transition">
+            Semua Data
+          </button>
+          <button type="button" onclick="applyQuickPreset('MINUS')" data-preset="MINUS" class="quick-chip px-3 py-1 rounded-full text-xs font-semibold bg-slate-100 hover:bg-rose-50 text-slate-700 hover:text-rose-700 dark:bg-slate-800 dark:text-slate-300 transition">
+            Uang Kurang (-)
+          </button>
+          <button type="button" onclick="applyQuickPreset('PLUS')" data-preset="PLUS" class="quick-chip px-3 py-1 rounded-full text-xs font-semibold bg-slate-100 hover:bg-purple-50 text-slate-700 hover:text-purple-700 dark:bg-slate-800 dark:text-slate-300 transition">
+            Uang Lebih (+)
+          </button>
+          <button type="button" onclick="applyQuickPreset('BIG')" data-preset="BIG" class="quick-chip px-3 py-1 rounded-full text-xs font-semibold bg-slate-100 hover:bg-amber-50 text-slate-700 hover:text-amber-700 dark:bg-slate-800 dark:text-slate-300 transition">
+            Nominal Besar (≥ 50rb)
+          </button>
+          <button type="button" onclick="applyQuickPreset('VOID')" data-preset="VOID" class="quick-chip px-3 py-1 rounded-full text-xs font-semibold bg-slate-100 hover:bg-fuchsia-50 text-slate-700 hover:text-fuchsia-700 dark:bg-slate-800 dark:text-slate-300 transition">
+            Void Belum Approve
+          </button>
+        </div>
+        <div class="hidden xl:flex items-center gap-3 text-[11px] text-slate-500 dark:text-slate-400">
+          <span class="inline-flex items-center gap-1.5"><span class="w-2 h-2 rounded-full bg-purple-600"></span><b>Plus (+):</b> Uang fisik/masuk lebih</span>
+          <span class="inline-flex items-center gap-1.5"><span class="w-2 h-2 rounded-full bg-rose-500"></span><b>Minus (-):</b> Uang fisik/setoran kurang</span>
+        </div>
+      </div>
+
+      <!-- Detailed Filter Controls -->
+      <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-12 gap-2.5 items-end">
+        <!-- Bulan -->
+        <div class="lg:col-span-2">
+          <label class="block text-[11px] font-semibold uppercase tracking-wider text-slate-500 dark:text-slate-400 mb-1">Bulan</label>
+          <select id="filter-bulan" class="w-full rounded-xl border border-purple-200/80 dark:border-slate-700 bg-purple-50/30 dark:bg-slate-800 px-3 py-2 text-xs sm:text-sm font-medium focus:outline-none focus:ring-2 focus:ring-purple-600">
+            <option value="ALL">Semua Bulan (Jan - Des)</option>
+            <option value="JANUARI">Januari 2026</option>
+            <option value="FEBRUARI">Februari 2026</option>
+            <option value="MARET">Maret 2026</option>
+            <option value="APRIL">April 2026</option>
+            <option value="MEI">Mei 2026</option>
+            <option value="JUNI">Juni 2026</option>
+            <option value="JULI">Juli 2026</option>
+            <option value="AGUSTUS">Agustus 2026</option>
+            <option value="SEPTEMBER">September 2026</option>
+            <option value="OKTOBER">Oktober 2026</option>
+            <option value="NOVEMBER">November 2026</option>
+            <option value="DESEMBER">Desember 2026</option>
+          </select>
+        </div>
+
+        <!-- Filter Rentang Tanggal (Dari Tanggal - Sampai Dengan) -->
+        <div class="sm:col-span-2 lg:col-span-4">
+          <div class="flex items-center justify-between mb-1">
+            <label class="block text-[11px] font-semibold uppercase tracking-wider text-slate-500 dark:text-slate-400">Rentang Tanggal (Mulai — Sampai)</label>
+            <button type="button" onclick="clearDateRange()" class="text-[10px] font-bold text-slate-400 hover:text-rose-500">Hapus Tgl</button>
+          </div>
+          <div class="grid grid-cols-11 gap-1.5 items-center">
+            <div class="col-span-5 relative">
+              <input type="date" id="filter-tgl-mulai" title="Dari Tanggal" class="w-full rounded-xl border border-purple-200/80 dark:border-slate-700 bg-purple-50/30 dark:bg-slate-800 px-2.5 py-2 text-xs font-medium focus:outline-none focus:ring-2 focus:ring-purple-600" />
+            </div>
+            <div class="col-span-1 text-center text-xs font-bold text-slate-400">s/d</div>
+            <div class="col-span-5 relative">
+              <input type="date" id="filter-tgl-akhir" title="Sampai Dengan Tanggal" class="w-full rounded-xl border border-purple-200/80 dark:border-slate-700 bg-purple-50/30 dark:bg-slate-800 px-2.5 py-2 text-xs font-medium focus:outline-none focus:ring-2 focus:ring-purple-600" />
+            </div>
+          </div>
+        </div>
+
+        <!-- Outlet + Quick Create -->
+        <div class="lg:col-span-2">
+          <div class="flex items-center justify-between mb-1">
+            <label class="block text-[11px] font-semibold uppercase tracking-wider text-slate-500 dark:text-slate-400">Outlet</label>
+            <button type="button" onclick="openOutletModal()" class="text-[10px] font-bold text-purple-700 dark:text-purple-400 hover:underline">+ Baru</button>
+          </div>
+          <select id="filter-outlet" class="w-full rounded-xl border border-purple-200/80 dark:border-slate-700 bg-purple-50/30 dark:bg-slate-800 px-3 py-2 text-xs sm:text-sm font-medium focus:outline-none focus:ring-2 focus:ring-purple-600">
+            <option value="ALL">Semua Outlet</option>
+          </select>
+        </div>
+
+        <!-- Metode -->
+        <div class="lg:col-span-2">
+          <label class="block text-[11px] font-semibold uppercase tracking-wider text-slate-500 dark:text-slate-400 mb-1">Metode Bayar</label>
+          <select id="filter-metode" class="w-full rounded-xl border border-purple-200/80 dark:border-slate-700 bg-purple-50/30 dark:bg-slate-800 px-3 py-2 text-xs sm:text-sm font-medium focus:outline-none focus:ring-2 focus:ring-purple-600">
+            <option value="ALL">Semua Metode</option>
+          </select>
+        </div>
+
+        <!-- Search & Reset -->
+        <div class="lg:col-span-2 flex items-center gap-1.5">
+          <div class="relative flex-1">
+            <input type="text" id="filter-search" placeholder="Cari crew / ket..." class="w-full rounded-xl border border-purple-200/80 dark:border-slate-700 bg-purple-50/30 dark:bg-slate-800 pl-8 pr-2.5 py-2 text-xs sm:text-sm focus:outline-none focus:ring-2 focus:ring-purple-600" />
+            <svg class="w-3.5 h-3.5 text-slate-400 absolute left-2.5 top-2.5" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"/></svg>
+          </div>
+          <button onclick="resetFilters()" class="px-2.5 py-2 rounded-xl border border-purple-200/80 dark:border-slate-700 hover:bg-purple-50 dark:hover:bg-slate-800 text-xs font-semibold text-slate-600 dark:text-slate-300 shrink-0" title="Reset Semua Filter">
+            Reset
+          </button>
+        </div>
+      </div>
+
+      <!-- Baris Tambahan: Kategori Penyebab -->
+      <div class="mt-2.5 pt-2.5 border-t border-purple-100/70 dark:border-slate-800/70 flex flex-col sm:flex-row sm:items-center gap-2">
+        <label class="text-[11px] font-semibold uppercase tracking-wider text-slate-500 dark:text-slate-400 shrink-0">Filter Kategori Kesalahan:</label>
+        <select id="filter-kategori" class="w-full sm:w-72 rounded-xl border border-purple-200/80 dark:border-slate-700 bg-purple-50/30 dark:bg-slate-800 px-3 py-1.5 text-xs font-medium focus:outline-none focus:ring-2 focus:ring-purple-600">
+          <option value="ALL">Semua Kategori Kesalahan</option>
+        </select>
+        <span id="active-date-range-badge" class="hidden text-[11px] font-semibold text-purple-800 dark:text-purple-300 bg-purple-100 dark:bg-purple-950/80 border border-purple-200 dark:border-purple-800 px-2.5 py-1 rounded-full"></span>
+      </div>
+    </div>
+  </section>
+
+  <!-- Main Content Container -->
+  <main class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-6 space-y-6">
+
+    <!-- 4 KPI Cards dengan Bahasa Sehari-hari -->
+    <section class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4 print-break">
+      <!-- Card 1: Total Kejadian -->
+      <div class="bg-white dark:bg-slate-900 rounded-2xl p-5 border border-purple-100 dark:border-slate-800 shadow-sm hover:shadow-md transition">
+        <div class="flex items-center justify-between">
+          <span class="text-xs font-bold uppercase tracking-wider text-slate-500 dark:text-slate-400">1. Total Kejadian</span>
+          <span class="w-8 h-8 rounded-xl bg-purple-100 dark:bg-purple-950 text-purple-700 dark:text-purple-300 flex items-center justify-center font-bold text-xs">#</span>
+        </div>
+        <div class="mt-3 flex items-baseline gap-2">
+          <h2 id="kpi-total-cases" class="text-2xl sm:text-3xl font-extrabold text-slate-900 dark:text-white">0</h2>
+          <span class="text-xs text-slate-500">transaksi selisih</span>
+        </div>
+        <p id="kpi-cases-sub" class="mt-2 text-xs text-slate-500 dark:text-slate-400">0 Lebih (+) • 0 Kurang (-)</p>
+      </div>
+
+      <!-- Card 2: Selisih Bersih (Net) -->
+      <div class="bg-white dark:bg-slate-900 rounded-2xl p-5 border border-purple-100 dark:border-slate-800 shadow-sm hover:shadow-md transition">
+        <div class="flex items-center justify-between">
+          <span class="text-xs font-bold uppercase tracking-wider text-slate-500 dark:text-slate-400">2. Selisih Bersih (Netto)</span>
+          <span id="kpi-net-badge" class="px-2 py-0.5 rounded-full text-[11px] font-bold bg-rose-50 text-rose-600">Minus</span>
+        </div>
+        <div class="mt-3">
+          <h2 id="kpi-net-amount" class="text-2xl sm:text-3xl font-extrabold text-rose-600">Rp 0</h2>
+        </div>
+        <p class="mt-2 text-xs text-slate-500 dark:text-slate-400">Gabungan total uang lebih & kurang</p>
+      </div>
+
+      <!-- Card 3: Total Perputaran Selisih (Absolut) -->
+      <div class="bg-white dark:bg-slate-900 rounded-2xl p-5 border border-purple-100 dark:border-slate-800 shadow-sm hover:shadow-md transition">
+        <div class="flex items-center justify-between">
+          <span class="text-xs font-bold uppercase tracking-wider text-slate-500 dark:text-slate-400">3. Total Nilai Kesalahan</span>
+          <span class="w-8 h-8 rounded-xl bg-fuchsia-100 dark:bg-fuchsia-950 text-fuchsia-700 dark:text-fuchsia-300 flex items-center justify-center font-bold text-xs">∑</span>
+        </div>
+        <div class="mt-3">
+          <h2 id="kpi-abs-amount" class="text-2xl sm:text-3xl font-extrabold text-slate-900 dark:text-white">Rp 0</h2>
+        </div>
+        <p class="mt-2 text-xs text-slate-500 dark:text-slate-400">Total nominal selisih (diabaikan +/-)</p>
+      </div>
+
+      <!-- Card 4: Perbandingan Uang Lebih vs Kurang -->
+      <div class="bg-white dark:bg-slate-900 rounded-2xl p-5 border border-purple-100 dark:border-slate-800 shadow-sm hover:shadow-md transition">
+        <div class="flex items-center justify-between">
+          <span class="text-xs font-bold uppercase tracking-wider text-slate-500 dark:text-slate-400">4. Lebih (+) vs Kurang (-)</span>
+          <span class="text-[11px] font-semibold text-slate-400">Rasio</span>
+        </div>
+        <div class="mt-2.5 space-y-1 text-xs font-bold">
+          <div class="flex justify-between text-purple-700 dark:text-purple-400">
+            <span>Lebih (+):</span>
+            <span id="kpi-plus-amount">Rp 0</span>
+          </div>
+          <div class="flex justify-between text-rose-600 dark:text-rose-400">
+            <span>Kurang (-):</span>
+            <span id="kpi-minus-amount">Rp 0</span>
+          </div>
+        </div>
+        <div class="mt-2.5 w-full h-2 bg-rose-200 dark:bg-rose-950 rounded-full overflow-hidden flex">
+          <div id="kpi-ratio-bar" class="bg-purple-600 h-full transition-all duration-500" style="width: 50%"></div>
+        </div>
+      </div>
+    </section>
+
+    <!-- Navigation Tabs -->
+    <nav class="flex flex-wrap items-center gap-2 bg-white dark:bg-slate-900 p-1.5 rounded-2xl border border-purple-100 dark:border-slate-800 shadow-sm no-print">
+      <button onclick="switchTab('overview')" id="tab-btn-overview" class="tab-btn flex-1 sm:flex-none px-4 py-2.5 rounded-xl text-xs sm:text-sm font-bold bg-purple-700 text-white shadow-sm transition">
+        📊 Ringkasan & Grafik
+      </button>
+      <button onclick="switchTab('crew')" id="tab-btn-crew" class="tab-btn flex-1 sm:flex-none px-4 py-2.5 rounded-xl text-xs sm:text-sm font-semibold text-slate-600 dark:text-slate-300 hover:bg-purple-50 dark:hover:bg-slate-800 transition">
+        👥 Ranking Crewstore
+      </button>
+      <button onclick="switchTab('outlets')" id="tab-btn-outlets" class="tab-btn flex-1 sm:flex-none px-4 py-2.5 rounded-xl text-xs sm:text-sm font-semibold text-slate-600 dark:text-slate-300 hover:bg-purple-50 dark:hover:bg-slate-800 transition">
+        🏪 Audit Outlet (<span id="outlet-count-badge">19</span>)
+      </button>
+      <button onclick="switchTab('logs')" id="tab-btn-logs" class="tab-btn flex-1 sm:flex-none px-4 py-2.5 rounded-xl text-xs sm:text-sm font-semibold text-slate-600 dark:text-slate-300 hover:bg-purple-50 dark:hover:bg-slate-800 transition">
+        📋 Log Transaksi (<span id="log-count-badge">139</span>)
+      </button>
+      <button onclick="switchTab('master')" id="tab-btn-master" class="tab-btn flex-1 sm:flex-none px-4 py-2.5 rounded-xl text-xs sm:text-sm font-semibold text-slate-600 dark:text-slate-300 hover:bg-purple-50 dark:hover:bg-slate-800 transition">
+        ⚙️ Kelola Outlet & Karyawan
+      </button>
+    </nav>
+
+    <!-- TAB 1: RINGKASAN & GRAFIK -->
+    <div id="tab-overview" class="tab-panel space-y-6">
+      <div class="grid grid-cols-1 lg:grid-cols-2 gap-6">
+        <!-- Chart 1: Tren Bulanan -->
+        <div class="bg-white dark:bg-slate-900 rounded-2xl p-5 border border-purple-100 dark:border-slate-800 shadow-sm print-break">
+          <div class="mb-4">
+            <h3 class="text-base font-bold text-slate-900 dark:text-white">Tren Selisih Per Bulan</h3>
+            <p class="text-xs text-slate-500 dark:text-slate-400">Perbandingan uang lebih (+), uang kurang (-), dan jumlah kasus tiap bulan</p>
+          </div>
+          <div class="relative h-72 w-full">
+            <canvas id="chart-monthly"></canvas>
+          </div>
+        </div>
+
+        <!-- Chart 2: Top 10 Outlet Bermasalah -->
+        <div class="bg-white dark:bg-slate-900 rounded-2xl p-5 border border-purple-100 dark:border-slate-800 shadow-sm print-break">
+          <div class="mb-4">
+            <h3 class="text-base font-bold text-slate-900 dark:text-white">10 Outlet dengan Frekuensi Selisih Tertinggi</h3>
+            <p class="text-xs text-slate-500 dark:text-slate-400">Klik nama outlet di tab Audit Outlet untuk inspeksi detail</p>
+          </div>
+          <div class="relative h-72 w-full">
+            <canvas id="chart-outlets"></canvas>
+          </div>
+        </div>
+
+        <!-- Chart 3: Kategori Kesalahan -->
+        <div class="bg-white dark:bg-slate-900 rounded-2xl p-5 border border-purple-100 dark:border-slate-800 shadow-sm print-break">
+          <div class="mb-4">
+            <h3 class="text-base font-bold text-slate-900 dark:text-white">Akar Penyebab Kesalahan Kasir</h3>
+            <p class="text-xs text-slate-500 dark:text-slate-400">Distribusi jenis kesalahan operasional yang paling sering terjadi</p>
+          </div>
+          <div class="relative h-72 w-full">
+            <canvas id="chart-categories"></canvas>
+          </div>
+        </div>
+
+        <!-- Chart 4: Metode Pembayaran -->
+        <div class="bg-white dark:bg-slate-900 rounded-2xl p-5 border border-purple-100 dark:border-slate-800 shadow-sm print-break">
+          <div class="mb-4">
+            <h3 class="text-base font-bold text-slate-900 dark:text-white">Sebaran Berdasarkan Channel Pembayaran</h3>
+            <p class="text-xs text-slate-500 dark:text-slate-400">Proporsi kasus pada Cash, QRIS, GoFood, GrabFood, dan ShopeeFood</p>
+          </div>
+          <div class="relative h-72 w-full">
+            <canvas id="chart-methods"></canvas>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- TAB 2: RANKING CREWSTORE -->
+    <div id="tab-crew" class="tab-panel hidden space-y-4">
+      <div class="bg-white dark:bg-slate-900 rounded-2xl p-5 border border-purple-100 dark:border-slate-800 shadow-sm">
+        <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-2 mb-4">
+          <div>
+            <h3 class="text-base font-bold text-slate-900 dark:text-white">Evaluasi & Ranking Kinerja Crewstore</h3>
+            <p class="text-xs text-slate-500 dark:text-slate-400">Klik baris nama crew untuk langsung melihat daftar transaksi selisihnya</p>
+          </div>
+        </div>
+        <div class="overflow-x-auto">
+          <table class="w-full text-left border-collapse text-xs sm:text-sm">
+            <thead>
+              <tr class="border-b border-purple-100 dark:border-slate-800 text-[11px] font-bold uppercase tracking-wider text-slate-500 dark:text-slate-400">
+                <th class="py-3 px-3">Rank</th>
+                <th class="py-3 px-3">Nama Crewstore</th>
+                <th class="py-3 px-3">Outlet</th>
+                <th class="py-3 px-3 text-center">Jumlah Kasus</th>
+                <th class="py-3 px-3 text-right">Selisih Bersih</th>
+                <th class="py-3 px-3 text-right">Total Nilai Kesalahan</th>
+                <th class="py-3 px-3 text-center">Status Audit</th>
+              </tr>
+            </thead>
+            <tbody id="crew-table-body" class="divide-y divide-slate-100 dark:divide-slate-800"></tbody>
+          </table>
+        </div>
+      </div>
+    </div>
+
+    <!-- TAB 3: AUDIT OUTLET -->
+    <div id="tab-outlets" class="tab-panel hidden space-y-4">
+      <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-3 bg-white dark:bg-slate-900 p-5 rounded-2xl border border-purple-100 dark:border-slate-800 shadow-sm">
+        <div>
+          <h3 class="text-base font-bold text-slate-900 dark:text-white">Performa & Status Audit Per Outlet</h3>
+          <p class="text-xs text-slate-500 dark:text-slate-400">Klik kartu outlet mana saja untuk memfilter seluruh dashboard ke outlet tersebut</p>
+        </div>
+        <button onclick="openOutletModal()" class="inline-flex items-center justify-center gap-1.5 px-4 py-2 rounded-xl bg-purple-700 hover:bg-purple-800 text-white text-xs sm:text-sm font-semibold shadow-sm transition">
+          + Tambah Kode Outlet Baru
+        </button>
+      </div>
+      <div id="outlet-cards-grid" class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4"></div>
+    </div>
+
+    <!-- TAB 4: LOG TRANSAKSI -->
+    <div id="tab-logs" class="tab-panel hidden space-y-4">
+      <div class="bg-white dark:bg-slate-900 rounded-2xl p-5 border border-purple-100 dark:border-slate-800 shadow-sm">
+        <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-2 mb-4">
+          <div>
+            <h3 class="text-base font-bold text-slate-900 dark:text-white">Daftar Lengkap Kejadian Selisih</h3>
+            <p id="pagination-info" class="text-xs text-slate-500 dark:text-slate-400">Menampilkan 0 - 0 dari 0 data</p>
+          </div>
+          <div class="flex items-center gap-2">
+            <label class="text-xs text-slate-500">Baris:</label>
+            <select id="per-page-select" onchange="changePerPage(this.value)" class="rounded-lg border border-purple-200 dark:border-slate-700 bg-purple-50/40 dark:bg-slate-800 px-2 py-1 text-xs font-semibold">
+              <option value="15">15</option>
+              <option value="30">30</option>
+              <option value="50">50</option>
+              <option value="200">Semua</option>
+            </select>
+          </div>
+        </div>
+
+        <div class="overflow-x-auto">
+          <table class="w-full text-left border-collapse text-xs sm:text-sm">
+            <thead>
+              <tr class="border-b border-purple-100 dark:border-slate-800 text-[11px] font-bold uppercase tracking-wider text-slate-500 dark:text-slate-400">
+                <th class="py-3 px-3 cursor-pointer hover:text-purple-700" onclick="sortLogs('id')">No ↕</th>
+                <th class="py-3 px-3 cursor-pointer hover:text-purple-700" onclick="sortLogs('tgl')">Tanggal ↕</th>
+                <th class="py-3 px-3 cursor-pointer hover:text-purple-700" onclick="sortLogs('outlet')">Outlet ↕</th>
+                <th class="py-3 px-3 cursor-pointer hover:text-purple-700" onclick="sortLogs('crewstore')">Crewstore ↕</th>
+                <th class="py-3 px-3 cursor-pointer hover:text-purple-700 text-right" onclick="sortLogs('selisih')">Selisih ↕</th>
+                <th class="py-3 px-3">Kategori & Keterangan</th>
+                <th class="py-3 px-3">Metode</th>
+              </tr>
+            </thead>
+            <tbody id="logs-table-body" class="divide-y divide-slate-100 dark:divide-slate-800"></tbody>
+          </table>
+        </div>
+
+        <!-- Pagination Controls -->
+        <div class="mt-4 flex items-center justify-between border-t border-purple-100 dark:border-slate-800 pt-4 no-print">
+          <button id="prev-page-btn" onclick="changePage(-1)" class="px-3 py-1.5 rounded-xl border border-purple-200 dark:border-slate-700 text-xs font-semibold disabled:opacity-40 hover:bg-purple-50 dark:hover:bg-slate-800">
+            ← Sebelumnya
+          </button>
+          <span id="page-indicator" class="text-xs font-bold text-slate-600 dark:text-slate-300">Halaman 1</span>
+          <button id="next-page-btn" onclick="changePage(1)" class="px-3 py-1.5 rounded-xl border border-purple-200 dark:border-slate-700 text-xs font-semibold disabled:opacity-40 hover:bg-purple-50 dark:hover:bg-slate-800">
+            Berikutnya →
+          </button>
+        </div>
+      </div>
+    </div>
+
+    <!-- TAB 5: KELOLA MASTER OUTLET & KARYAWAN -->
+    <div id="tab-master" class="tab-panel hidden space-y-6">
+      <div class="grid grid-cols-1 lg:grid-cols-12 gap-6">
+        <!-- Tabel Manajemen Outlet -->
+        <div class="lg:col-span-5 bg-white dark:bg-slate-900 rounded-2xl p-5 border border-purple-100 dark:border-slate-800 shadow-sm space-y-4">
+          <div>
+            <h3 class="text-base font-bold text-slate-900 dark:text-white">Daftar & Edit Outlet</h3>
+            <p class="text-xs text-slate-500 dark:text-slate-400">Tambah outlet baru atau ubah kode/nama outlet yang sudah ada</p>
+          </div>
+
+          <!-- Form Tambah Outlet Langsung di Tabel -->
+          <form onsubmit="handleInlineAddOutlet(event)" class="flex gap-2">
+            <input type="text" id="inline-new-outlet" required maxlength="12" placeholder="Kode outlet baru (cth: BDG)" class="flex-1 rounded-xl border border-purple-200 dark:border-slate-700 bg-purple-50/30 dark:bg-slate-800 px-3 py-2 text-xs sm:text-sm font-bold uppercase focus:outline-none focus:ring-2 focus:ring-purple-600" />
+            <button type="submit" class="px-4 py-2 rounded-xl bg-purple-700 hover:bg-purple-800 text-white text-xs font-bold shadow-sm shrink-0 transition">
+              + Tambah
+            </button>
+          </form>
+
+          <div class="overflow-x-auto max-h-[460px] overflow-y-auto border border-purple-100 dark:border-slate-800 rounded-xl">
+            <table class="w-full text-left border-collapse text-xs sm:text-sm">
+              <thead class="sticky top-0 bg-purple-50/70 dark:bg-slate-800 z-10">
+                <tr class="border-b border-purple-100 dark:border-slate-700 text-[11px] font-bold uppercase tracking-wider text-slate-500 dark:text-slate-400">
+                  <th class="py-2.5 px-3">No</th>
+                  <th class="py-2.5 px-3">Kode / Nama Outlet</th>
+                  <th class="py-2.5 px-3 text-center">Kasus</th>
+                  <th class="py-2.5 px-3 text-right">Aksi</th>
+                </tr>
+              </thead>
+              <tbody id="master-outlet-tbody" class="divide-y divide-slate-100 dark:divide-slate-800"></tbody>
+            </table>
+          </div>
+        </div>
+
+        <!-- Tabel Manajemen Karyawan (Crewstore) -->
+        <div class="lg:col-span-7 bg-white dark:bg-slate-900 rounded-2xl p-5 border border-purple-100 dark:border-slate-800 shadow-sm space-y-4">
+          <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-2">
+            <div>
+              <h3 class="text-base font-bold text-slate-900 dark:text-white">Daftar & Edit Nama Karyawan (Crewstore)</h3>
+              <p class="text-xs text-slate-500 dark:text-slate-400">Ubah penulisan nama karyawan untuk menyatukan rekap secara otomatis</p>
+            </div>
+            <div class="relative w-full sm:w-56">
+              <input type="text" id="master-crew-search" oninput="renderMasterTables()" placeholder="Cari nama karyawan..." class="w-full rounded-xl border border-purple-200 dark:border-slate-700 bg-purple-50/30 dark:bg-slate-800 pl-8 pr-3 py-1.5 text-xs focus:outline-none focus:ring-2 focus:ring-purple-600" />
+              <svg class="w-3.5 h-3.5 text-slate-400 absolute left-2.5 top-2" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"/></svg>
+            </div>
+          </div>
+
+          <div class="overflow-x-auto max-h-[505px] overflow-y-auto border border-purple-100 dark:border-slate-800 rounded-xl">
+            <table class="w-full text-left border-collapse text-xs sm:text-sm">
+              <thead class="sticky top-0 bg-purple-50/70 dark:bg-slate-800 z-10">
+                <tr class="border-b border-purple-100 dark:border-slate-700 text-[11px] font-bold uppercase tracking-wider text-slate-500 dark:text-slate-400">
+                  <th class="py-2.5 px-3">No</th>
+                  <th class="py-2.5 px-3">Nama Karyawan</th>
+                  <th class="py-2.5 px-3">Outlet</th>
+                  <th class="py-2.5 px-3 text-center">Kasus</th>
+                  <th class="py-2.5 px-3 text-right">Aksi</th>
+                </tr>
+              </thead>
+              <tbody id="master-crew-tbody" class="divide-y divide-slate-100 dark:divide-slate-800"></tbody>
+            </table>
+          </div>
+        </div>
+      </div>
+    </div>
+
+  </main>
+
+  <!-- MODAL 1: TAMBAH OUTLET BARU -->
+  <div id="modal-outlet" class="fixed inset-0 z-50 hidden bg-slate-900/60 backdrop-blur-sm flex items-center justify-center p-4 no-print">
+    <div class="bg-white dark:bg-slate-900 rounded-3xl max-w-md w-full p-6 border border-purple-100 dark:border-slate-800 shadow-2xl">
+      <div class="flex items-center justify-between pb-3 border-b border-purple-100 dark:border-slate-800">
+        <h3 class="text-base font-extrabold text-slate-900 dark:text-white">Buat / Tambah Outlet Baru</h3>
+        <button onclick="closeOutletModal()" class="text-slate-400 hover:text-slate-600 text-lg font-bold">✕</button>
+      </div>
+      <form onsubmit="handleAddOutlet(event)" class="mt-4 space-y-4">
+        <div>
+          <label class="block text-xs font-bold uppercase tracking-wider text-slate-500 mb-1">Kode Outlet (Singkatan 2-5 Huruf)</label>
+          <input type="text" id="new-outlet-code" required maxlength="10" placeholder="Contoh: RNT / BDG / DPS" class="w-full rounded-xl border border-purple-200 dark:border-slate-700 bg-purple-50/30 dark:bg-slate-800 px-3.5 py-2.5 text-sm font-bold uppercase focus:outline-none focus:ring-2 focus:ring-purple-600" />
+          <p class="text-[11px] text-slate-400 mt-1">Kode outlet akan otomatis tersimpan dan muncul di filter serta form input.</p>
+        </div>
+        <div class="flex justify-end gap-2 pt-2">
+          <button type="button" onclick="closeOutletModal()" class="px-4 py-2 rounded-xl border border-slate-200 dark:border-slate-700 text-xs font-semibold">Batal</button>
+          <button type="submit" class="px-4 py-2 rounded-xl bg-purple-700 hover:bg-purple-800 text-white text-xs font-bold shadow-sm">Simpan Outlet</button>
+        </div>
+      </form>
+    </div>
+  </div>
+
+  <!-- MODAL 2: TAMBAH DATA SELISIH BARU -->
+  <div id="modal-add" class="fixed inset-0 z-50 hidden bg-slate-900/60 backdrop-blur-sm flex items-center justify-center p-4 no-print">
+    <div class="bg-white dark:bg-slate-900 rounded-3xl max-w-lg w-full p-6 border border-purple-100 dark:border-slate-800 shadow-2xl max-h-[90vh] overflow-y-auto">
+      <div class="flex items-center justify-between pb-3 border-b border-purple-100 dark:border-slate-800">
+        <h3 class="text-base font-extrabold text-slate-900 dark:text-white">Catat Kejadian Selisih Baru</h3>
+        <button onclick="closeAddModal()" class="text-slate-400 hover:text-slate-600 text-lg font-bold">✕</button>
+      </div>
+      <form onsubmit="handleAddRecord(event)" class="mt-4 space-y-3.5">
+        <div class="grid grid-cols-2 gap-3">
+          <div>
+            <label class="block text-xs font-bold text-slate-500 mb-1">Bulan</label>
+            <select id="add-bulan" required class="w-full rounded-xl border border-purple-200 dark:border-slate-700 bg-purple-50/30 dark:bg-slate-800 px-3 py-2 text-sm">
+              <option value="JANUARI">JANUARI</option>
+              <option value="FEBRUARI">FEBRUARI</option>
+              <option value="MARET">MARET</option>
+              <option value="APRIL">APRIL</option>
+              <option value="MEI">MEI</option>
+              <option value="JUNI">JUNI</option>
+              <option value="JULI">JULI</option>
+              <option value="AGUSTUS">AGUSTUS</option>
+              <option value="SEPTEMBER">SEPTEMBER</option>
+              <option value="OKTOBER">OKTOBER</option>
+              <option value="NOVEMBER" selected>NOVEMBER</option>
+              <option value="DESEMBER">DESEMBER</option>
+            </select>
+          </div>
+          <div>
+            <label class="block text-xs font-bold text-slate-500 mb-1">Tanggal</label>
+            <input type="text" id="add-tgl" required placeholder="25 NOVEMBER 2026" class="w-full rounded-xl border border-purple-200 dark:border-slate-700 bg-purple-50/30 dark:bg-slate-800 px-3 py-2 text-sm uppercase" />
+          </div>
+        </div>
+        <div class="grid grid-cols-2 gap-3">
+          <div>
+            <label class="block text-xs font-bold text-slate-500 mb-1">Outlet (Pilih / Ketik Baru)</label>
+            <input type="text" id="add-outlet" list="outlet-datalist" required placeholder="Contoh: GLC" class="w-full rounded-xl border border-purple-200 dark:border-slate-700 bg-purple-50/30 dark:bg-slate-800 px-3 py-2 text-sm uppercase font-bold" />
+            <datalist id="outlet-datalist"></datalist>
+          </div>
+          <div>
+            <label class="block text-xs font-bold text-slate-500 mb-1">Nominal Selisih (Rp)</label>
+            <input type="number" id="add-selisih" required placeholder="-15000 atau 20000" class="w-full rounded-xl border border-purple-200 dark:border-slate-700 bg-purple-50/30 dark:bg-slate-800 px-3 py-2 text-sm font-bold" />
+          </div>
+        </div>
+        <div>
+          <label class="block text-xs font-bold text-slate-500 mb-1">Nama Crewstore</label>
+          <input type="text" id="add-crew" required placeholder="Nama lengkap kasir / crew" class="w-full rounded-xl border border-purple-200 dark:border-slate-700 bg-purple-50/30 dark:bg-slate-800 px-3 py-2 text-sm" />
+        </div>
+        <div class="grid grid-cols-2 gap-3">
+          <div>
+            <label class="block text-xs font-bold text-slate-500 mb-1">Metode Pembayaran</label>
+            <select id="add-metode" class="w-full rounded-xl border border-purple-200 dark:border-slate-700 bg-purple-50/30 dark:bg-slate-800 px-3 py-2 text-sm">
+              <option value="CASH">CASH</option>
+              <option value="QRIS">QRIS</option>
+              <option value="CASH & QRIS">CASH & QRIS</option>
+              <option value="GOFOOD">GOFOOD</option>
+              <option value="GRABFOOD">GRABFOOD</option>
+              <option value="SHOPEEFOOD">SHOPEEFOOD</option>
+            </select>
+          </div>
+          <div>
+            <label class="block text-xs font-bold text-slate-500 mb-1">Kategori Kesalahan</label>
+            <select id="add-kategori" class="w-full rounded-xl border border-purple-200 dark:border-slate-700 bg-purple-50/30 dark:bg-slate-800 px-3 py-2 text-sm">
+              <option value="Tidak / Kurang Input">Tidak / Kurang Input</option>
+              <option value="Lebih / Double Input">Lebih / Double Input</option>
+              <option value="Salah Metode Pembayaran">Salah Metode Pembayaran</option>
+              <option value="Selisih Uang Fisik / Modal">Selisih Uang Fisik / Modal</option>
+              <option value="Salah Input Item / Ukuran">Salah Input Item / Ukuran</option>
+              <option value="Void Belum Approve">Void Belum Approve</option>
+              <option value="Salah Input DP / Pelunasan">Salah Input DP / Pelunasan</option>
+              <option value="Lainnya / No Reason">Lainnya / No Reason</option>
+            </select>
+          </div>
+        </div>
+        <div>
+          <label class="block text-xs font-bold text-slate-500 mb-1">Keterangan Detail</label>
+          <textarea id="add-ket" rows="2" required placeholder="Contoh: Crewstore tidak input 2 Ori Kecil" class="w-full rounded-xl border border-purple-200 dark:border-slate-700 bg-purple-50/30 dark:bg-slate-800 px-3 py-2 text-sm"></textarea>
+        </div>
+        <div class="flex justify-end gap-2 pt-2">
+          <button type="button" onclick="closeAddModal()" class="px-4 py-2 rounded-xl border border-slate-200 dark:border-slate-700 text-xs font-semibold">Batal</button>
+          <button type="submit" class="px-4 py-2 rounded-xl bg-purple-700 hover:bg-purple-800 text-white text-xs font-bold shadow-sm">Simpan Data</button>
+        </div>
+      </form>
+    </div>
+  </div>
+
+  <!-- MODAL 3: DETAIL CATATAN AUDIT TRANSAKSI -->
+  <div id="modal-detail" onclick="if(event.target === this) closeDetailModal()" class="fixed inset-0 z-50 hidden bg-slate-900/60 backdrop-blur-sm flex items-center justify-center p-4 no-print">
+    <div class="bg-white dark:bg-slate-900 rounded-[28px] max-w-lg w-full p-6 sm:p-7 border border-purple-100 dark:border-slate-800 shadow-2xl transform transition-all">
+      <!-- Header Modal -->
+      <div class="flex items-center justify-between pb-4 border-b border-purple-100 dark:border-slate-800">
+        <div class="flex items-center gap-3">
+          <span id="detail-record-badge" class="px-3 py-1 rounded-full bg-purple-100 dark:bg-purple-950 text-purple-800 dark:text-purple-200 text-xs font-extrabold">
+            Record #1
+          </span>
+          <h3 class="text-base sm:text-lg font-extrabold text-slate-900 dark:text-white tracking-tight">
+            Detail Catatan Audit Transaksi
+          </h3>
+        </div>
+        <button onclick="closeDetailModal()" class="w-8 h-8 rounded-full flex items-center justify-center text-slate-400 hover:text-slate-600 hover:bg-purple-50 dark:hover:bg-slate-800 transition text-base font-bold">
+          ✕
+        </button>
+      </div>
+
+      <!-- Body Modal -->
+      <div class="mt-5 space-y-3.5">
+        <!-- Box 1: Tanggal & Periode + Nominal Selisih -->
+        <div class="rounded-2xl border border-purple-100 dark:border-slate-800 bg-purple-50/40 dark:bg-slate-800/40 p-4 flex items-start justify-between gap-4">
+          <div>
+            <span class="block text-[11px] font-bold uppercase tracking-wider text-slate-400">Tanggal & Periode</span>
+            <p id="detail-tgl" class="text-base font-extrabold text-slate-900 dark:text-white mt-1">24 JULI 2026</p>
+            <p id="detail-minggu" class="text-xs font-medium text-slate-500 dark:text-slate-400 mt-0.5">20 JULI 2026 - 26 JULI 2026</p>
+          </div>
+          <div class="text-right">
+            <span class="block text-[11px] font-bold uppercase tracking-wider text-slate-400">Nominal Selisih</span>
+            <p id="detail-selisih" class="text-xl sm:text-2xl font-extrabold text-purple-700 dark:text-purple-400 mt-0.5">+Rp 20.000</p>
+            <p id="detail-selisih-desc" class="text-xs font-medium text-slate-500 dark:text-slate-400 mt-0.5">Kurang Input / Lebih Uang</p>
+          </div>
+        </div>
+
+        <!-- Box 2: Outlet & Metode Pembayaran -->
+        <div class="grid grid-cols-2 gap-3">
+          <div class="rounded-2xl border border-purple-100 dark:border-slate-800 p-3.5">
+            <span class="block text-xs font-medium text-slate-400">Outlet</span>
+            <p id="detail-outlet" class="text-base font-extrabold text-slate-900 dark:text-white mt-0.5">IMB</p>
+          </div>
+          <div class="rounded-2xl border border-purple-100 dark:border-slate-800 p-3.5">
+            <span class="block text-xs font-medium text-slate-400">Metode Pembayaran</span>
+            <p id="detail-metode" class="text-base font-extrabold text-slate-900 dark:text-white mt-0.5">QRIS</p>
+          </div>
+        </div>
+
+        <!-- Box 3: Nama Crewstore -->
+        <div class="rounded-2xl border border-purple-100 dark:border-slate-800 p-3.5">
+          <span class="block text-xs font-medium text-slate-400">Nama Crewstore</span>
+          <p id="detail-crew" class="text-base font-extrabold text-slate-900 dark:text-white mt-0.5">Ni Made Ana Apsari</p>
+        </div>
+
+        <!-- Box 4: Kategori Kesalahan -->
+        <div class="rounded-2xl border border-purple-100 dark:border-slate-800 p-3.5">
+          <span class="block text-xs font-medium text-slate-400">Kategori Kesalahan</span>
+          <p id="detail-kategori" class="text-base font-extrabold text-purple-700 dark:text-purple-400 mt-0.5">Tidak / Kurang Input</p>
+        </div>
+
+        <!-- Box 5: Kronologi / Keterangan Audit -->
+        <div class="rounded-2xl border border-amber-300/90 dark:border-amber-700/70 bg-amber-50/80 dark:bg-amber-950/30 p-4">
+          <span class="block text-xs font-extrabold text-amber-800 dark:text-amber-300">Kronologi / Keterangan Audit:</span>
+          <p id="detail-keterangan" class="text-sm font-medium text-slate-800 dark:text-slate-100 mt-1.5 leading-relaxed">
+            Crewstore tidak input 1 Durian Besar
+          </p>
+        </div>
+      </div>
+
+      <!-- Footer Actions -->
+      <div class="mt-6 flex items-center justify-between gap-3">
+        <button id="detail-filter-crew-btn" type="button" class="px-5 py-2.5 rounded-2xl bg-purple-100 hover:bg-purple-200 text-purple-800 dark:bg-purple-950 dark:hover:bg-purple-900 dark:text-purple-300 text-xs sm:text-sm font-extrabold transition">
+          Filter Crew Ini
+        </button>
+        <button type="button" onclick="closeDetailModal()" class="px-6 py-2.5 rounded-2xl bg-purple-950 hover:bg-purple-900 dark:bg-slate-800 dark:hover:bg-slate-700 text-white text-xs sm:text-sm font-extrabold shadow-sm transition">
+          Tutup
+        </button>
+      </div>
+    </div>
+  </div>
+
+  <!-- Embedded Dataset & Application Logic -->
+  <script>
+    const INITIAL_RECORDS = [
+      {"id": 1, "bulan": "JULI", "minggu": "20 JULI 2026 - 26 JULI 2026", "tgl": "22 JULI 2026", "outlet": "TW", "crewstore": "Karenita Marta Sofia", "selisih": 10000, "keterangan": "Crewstore kurang input 1 Ori Kecil", "metode": "CASH", "kategori": "Tidak / Kurang Input"},
+      {"id": 2, "bulan": "JULI", "minggu": "20 JULI 2026 - 26 JULI 2026", "tgl": "22 JULI 2026", "outlet": "PMG", "crewstore": "Salsabila R Z", "selisih": 10000, "keterangan": "Transaksi 1 Ori Kecil pending karena wifi mati sudah konfirmasi IT", "metode": "CASH", "kategori": "Lainnya / No Reason"},
+      {"id": 3, "bulan": "JULI", "minggu": "20 JULI 2026 - 26 JULI 2026", "tgl": "23 JULI 2026", "outlet": "WTG", "crewstore": "Evan Putra Bali Ngara", "selisih": 10000, "keterangan": "Crewstore tidak input 1 Ori Kecil", "metode": "QRIS", "kategori": "Tidak / Kurang Input"},
+      {"id": 4, "bulan": "JULI", "minggu": "20 JULI 2026 - 26 JULI 2026", "tgl": "24 JULI 2026", "outlet": "IMB", "crewstore": "Ni Made Ana Apsari", "selisih": 20000, "keterangan": "Crewstore tidak input 1 Durian Besar", "metode": "QRIS", "kategori": "Tidak / Kurang Input"},
+      {"id": 5, "bulan": "JULI", "minggu": "20 JULI 2026 - 26 JULI 2026", "tgl": "24 JULI 2026", "outlet": "SST", "crewstore": "Fahira", "selisih": -15000, "keterangan": "Crewstore salah input harusnya 3 Ori Kecil diinput 3 Ori Besar", "metode": "SHOPEEFOOD", "kategori": "Salah Input Item / Ukuran"},
+      {"id": 6, "bulan": "JULI", "minggu": "20 JULI 2026 - 26 JULI 2026", "tgl": "25 JULI 2026", "outlet": "GRJ", "crewstore": "Ratna Dinda Febiola", "selisih": -5000, "keterangan": "Crewstore tidak mengecek saat customer kurang bayar", "metode": "CASH", "kategori": "Selisih Uang Fisik / Modal"},
+      {"id": 7, "bulan": "JULI", "minggu": "20 JULI 2026 - 26 JULI 2026", "tgl": "26 JULI 2026", "outlet": "AYN", "crewstore": "Rafly Ferdiansyah Saputra", "selisih": 15000, "keterangan": "Crewstore tidak input Qris 1 Ori Besar", "metode": "QRIS", "kategori": "Tidak / Kurang Input"},
+      {"id": 8, "bulan": "JULI", "minggu": "27 JULI 2026 - 2 AGUSTUS 2026", "tgl": "28 JULI 2026", "outlet": "TPR", "crewstore": "Aissyah Salshyabilla Putri", "selisih": 30000, "keterangan": "Crewstore tidak input 3 Ori Kecil", "metode": "CASH", "kategori": "Tidak / Kurang Input"},
+      {"id": 9, "bulan": "JULI", "minggu": "27 JULI 2026 - 2 AGUSTUS 2026", "tgl": "28 JULI 2026", "outlet": "TPR", "crewstore": "Aissyah Salshyabilla Putri", "selisih": 10000, "keterangan": "Crewstore tidak input 1 Ori Kecil", "metode": "QRIS", "kategori": "Tidak / Kurang Input"},
+      {"id": 10, "bulan": "JULI", "minggu": "27 JULI 2026 - 2 AGUSTUS 2026", "tgl": "28 JULI 2026", "outlet": "TRI", "crewstore": "Dea Nur Fikriya", "selisih": -10000, "keterangan": "Uang omset terselip di uang modal", "metode": "CASH", "kategori": "Selisih Uang Fisik / Modal"},
+      {"id": 11, "bulan": "JULI", "minggu": "27 JULI 2026 - 2 AGUSTUS 2026", "tgl": "28 JULI 2026", "outlet": "DLG", "crewstore": "Lalu Alfian Ansori", "selisih": -75000, "keterangan": "Crewstore salah input metode pembayaran harusnya Qris terinput Cash", "metode": "CASH", "kategori": "Salah Metode Pembayaran"},
+      {"id": 12, "bulan": "JULI", "minggu": "27 JULI 2026 - 2 AGUSTUS 2026", "tgl": "28 JULI 2026", "outlet": "KPN", "crewstore": "Nadia Safira Zalyanti", "selisih": 5000, "keterangan": "Crewstore salah input harusnya 1 Ori Besar terinput 1 Ori Kecil", "metode": "QRIS", "kategori": "Salah Input Item / Ukuran"},
+      {"id": 13, "bulan": "JULI", "minggu": "27 JULI 2026 - 2 AGUSTUS 2026", "tgl": "29 JULI 2026", "outlet": "GLC", "crewstore": "Nadia Safira Zalyanti", "selisih": 5000, "keterangan": "Crewstore salah input harusnya 1 Durian Kecil terinput 1 Ori kecil", "metode": "GOFOOD", "kategori": "Salah Input Item / Ukuran"},
+      {"id": 14, "bulan": "JULI", "minggu": "27 JULI 2026 - 2 AGUSTUS 2026", "tgl": "31 JULI 2026", "outlet": "WTG", "crewstore": "Okta", "selisih": -10000, "keterangan": "Crewstore salah input metode pembayaran harusnya Qris terinput Cash", "metode": "CASH", "kategori": "Salah Metode Pembayaran"},
+      {"id": 15, "bulan": "JULI", "minggu": "27 JULI 2026 - 2 AGUSTUS 2026", "tgl": "31 JULI 2026", "outlet": "GLC", "crewstore": "Nadia Safira Zalyanti", "selisih": -55000, "keterangan": "Crewstore tidak input 1 Durian Kecil 2 Durian Besar", "metode": "SHOPEEFOOD", "kategori": "Tidak / Kurang Input"},
+      {"id": 16, "bulan": "JULI", "minggu": "27 JULI 2026 - 2 AGUSTUS 2026", "tgl": "1 AGUSTUS 2026", "outlet": "DLG", "crewstore": "Darius Arvin Devandi", "selisih": 10000, "keterangan": "Crewstore salah input harusnya 2 Durian besar di input 2 Durian kecil", "metode": "SHOPEEFOOD", "kategori": "Salah Input Item / Ukuran"},
+      {"id": 17, "bulan": "JULI", "minggu": "27 JULI 2026 - 2 AGUSTUS 2026", "tgl": "2 AGUSTUS 2026", "outlet": "TPR", "crewstore": "Aissyah Salshyabilla Putri", "selisih": 80000, "keterangan": "Crewstore tidak input 8 Ori Kecil", "metode": "QRIS", "kategori": "Tidak / Kurang Input"},
+      {"id": 18, "bulan": "AGUSTUS", "minggu": "3 AGUSTUS 2026 - 9 AGUSTUS 2026", "tgl": "3 AGUSTUS 2026", "outlet": "ATS", "crewstore": "Putri Bunga", "selisih": -20000, "keterangan": "Crewstore lebih input 2 Ori Kecil", "metode": "QRIS", "kategori": "Lebih / Double Input"},
+      {"id": 19, "bulan": "AGUSTUS", "minggu": "3 AGUSTUS 2026 - 9 AGUSTUS 2026", "tgl": "3 AGUSTUS 2026", "outlet": "SST", "crewstore": "Nurdinda", "selisih": 30000, "keterangan": "Crewstore tidak input sales 2 Ori Besar", "metode": "GOFOOD", "kategori": "Tidak / Kurang Input"},
+      {"id": 20, "bulan": "AGUSTUS", "minggu": "3 AGUSTUS 2026 - 9 AGUSTUS 2026", "tgl": "3 AGUSTUS 2026", "outlet": "GLC", "crewstore": "Nadia Safira Zalyanti", "selisih": 15000, "keterangan": "Crewstore kurang input sales 1 Ori Besar", "metode": "GOFOOD", "kategori": "Tidak / Kurang Input"},
+      {"id": 21, "bulan": "AGUSTUS", "minggu": "3 AGUSTUS 2026 - 9 AGUSTUS 2026", "tgl": "5 AGUSTUS 2026", "outlet": "PMG", "crewstore": "Leo Bintang Wicaksana", "selisih": 10000, "keterangan": "Crewstore lupa input 1 ori kecil", "metode": "CASH", "kategori": "Tidak / Kurang Input"},
+      {"id": 22, "bulan": "AGUSTUS", "minggu": "3 AGUSTUS 2026 - 9 AGUSTUS 2026", "tgl": "5 AGUSTUS 2026", "outlet": "NKB", "crewstore": "Putri Wulan", "selisih": -10000, "keterangan": "Uang omset terselip di uang modal", "metode": "CASH", "kategori": "Selisih Uang Fisik / Modal"},
+      {"id": 23, "bulan": "AGUSTUS", "minggu": "3 AGUSTUS 2026 - 9 AGUSTUS 2026", "tgl": "8 AGUSTUS 2026", "outlet": "ATS", "crewstore": "Taufik Hidayat", "selisih": 75000, "keterangan": "Crewstore salah input metode pembayaran harus nya Cash terinput Qris", "metode": "CASH", "kategori": "Salah Metode Pembayaran"},
+      {"id": 24, "bulan": "AGUSTUS", "minggu": "3 AGUSTUS 2026 - 9 AGUSTUS 2026", "tgl": "8 AGUSTUS 2026", "outlet": "GLC", "crewstore": "Citra Amelia", "selisih": -10000, "keterangan": "Crewstore lebih input 1 Ori Kecil di exocore", "metode": "QRIS", "kategori": "Lebih / Double Input"},
+      {"id": 25, "bulan": "AGUSTUS", "minggu": "3 AGUSTUS 2026 - 9 AGUSTUS 2026", "tgl": "9 AGUSTUS 2026", "outlet": "TW", "crewstore": "Cahyani", "selisih": 70000, "keterangan": "Crewstore salah input harusnya Goofood diinput Grabfood", "metode": "GOFOOD", "kategori": "Salah Metode Pembayaran"},
+      {"id": 26, "bulan": "AGUSTUS", "minggu": "3 AGUSTUS 2026 - 9 AGUSTUS 2026", "tgl": "9 AGUSTUS 2026", "outlet": "GLC", "crewstore": "Gusti Ngurah Komang Ari Prawira", "selisih": 35000, "keterangan": "Crewstore tidak input 1 Durian Kecil dan 1 Durian Besar", "metode": "GOFOOD", "kategori": "Tidak / Kurang Input"},
+      {"id": 27, "bulan": "AGUSTUS", "minggu": "3 AGUSTUS 2026 - 9 AGUSTUS 2026", "tgl": "9 AGUSTUS 2026", "outlet": "GLC", "crewstore": "Gusti Ngurah Komang Ari Prawira", "selisih": 10000, "keterangan": "Crewstore tidak input 1 Ori Kecil", "metode": "CASH", "kategori": "Tidak / Kurang Input"},
+      {"id": 28, "bulan": "AGUSTUS", "minggu": "10 AGUSTUS 2026 - 16 AGUSTUS 2026", "tgl": "10 AGUSTUS 2026", "outlet": "SST", "crewstore": "Erika Fajriatul", "selisih": -15000, "keterangan": "Crewstore lebih input 1 Ori Besar", "metode": "GOFOOD", "kategori": "Lebih / Double Input"},
+      {"id": 29, "bulan": "AGUSTUS", "minggu": "10 AGUSTUS 2026 - 16 AGUSTUS 2026", "tgl": "10 AGUSTUS 2026", "outlet": "GLC", "crewstore": "Citra Amelia", "selisih": 30000, "keterangan": "Crewstore tidak input 2 Ori Besar", "metode": "SHOPEEFOOD", "kategori": "Tidak / Kurang Input"},
+      {"id": 30, "bulan": "AGUSTUS", "minggu": "10 AGUSTUS 2026 - 16 AGUSTUS 2026", "tgl": "12 AGUSTUS 2026", "outlet": "SST", "crewstore": "Erika Fajriatul", "selisih": 10000, "keterangan": "Crewstore tidak input 1 Ori Kecil", "metode": "QRIS", "kategori": "Tidak / Kurang Input"},
+      {"id": 31, "bulan": "AGUSTUS", "minggu": "10 AGUSTUS 2026 - 16 AGUSTUS 2026", "tgl": "12 AGUSTUS 2026", "outlet": "PMG", "crewstore": "Fani Amelia Syam", "selisih": 40000, "keterangan": "Crewstore tidak input 4 Ori Kecil", "metode": "GOFOOD", "kategori": "Tidak / Kurang Input"},
+      {"id": 32, "bulan": "AGUSTUS", "minggu": "10 AGUSTUS 2026 - 16 AGUSTUS 2026", "tgl": "12 AGUSTUS 2026", "outlet": "IMB", "crewstore": "Popyliana Bozu Pati", "selisih": 25000, "keterangan": "Crewstore lupa input 1 ori kecil dan 1 durian kecil", "metode": "GRABFOOD", "kategori": "Tidak / Kurang Input"},
+      {"id": 33, "bulan": "AGUSTUS", "minggu": "10 AGUSTUS 2026 - 16 AGUSTUS 2026", "tgl": "12 AGUSTUS 2026", "outlet": "IMB", "crewstore": "Popyliana Bozu Pati", "selisih": 50000, "keterangan": "Crewstore lupa input 2 durian besar dan 1 ori kecil", "metode": "GOFOOD", "kategori": "Tidak / Kurang Input"},
+      {"id": 34, "bulan": "AGUSTUS", "minggu": "10 AGUSTUS 2026 - 16 AGUSTUS 2026", "tgl": "14 AGUSTUS 2026", "outlet": "TPR", "crewstore": "Aissyah Salshyabilla Putri", "selisih": -40000, "keterangan": "Crewstore menginput ulang Sales tgl 13 Ori Kecil 4", "metode": "SHOPEEFOOD", "kategori": "Lebih / Double Input"},
+      {"id": 35, "bulan": "AGUSTUS", "minggu": "10 AGUSTUS 2026 - 16 AGUSTUS 2026", "tgl": "14 AGUSTUS 2026", "outlet": "PMG", "crewstore": "Gusti Ngurah Komang Ari Prawira", "selisih": 10000, "keterangan": "Crewstore tidak input 1 ori kecil", "metode": "CASH", "kategori": "Tidak / Kurang Input"},
+      {"id": 36, "bulan": "AGUSTUS", "minggu": "10 AGUSTUS 2026 - 16 AGUSTUS 2026", "tgl": "16 AGUSTUS 2026", "outlet": "WTG", "crewstore": "Ni Made Ana Apsari", "selisih": 10000, "keterangan": "Crewstore tidak input 1 Ori Kecil", "metode": "QRIS", "kategori": "Tidak / Kurang Input"},
+      {"id": 37, "bulan": "AGUSTUS", "minggu": "10 AGUSTUS 2026 - 16 AGUSTUS 2026", "tgl": "16 AGUSTUS 2026", "outlet": "IMB", "crewstore": "Popyliana Bozu Pati", "selisih": 15000, "keterangan": "Crewstore tidak input 1 Ori Besar", "metode": "CASH", "kategori": "Tidak / Kurang Input"},
+      {"id": 38, "bulan": "AGUSTUS", "minggu": "10 AGUSTUS 2026 - 16 AGUSTUS 2026", "tgl": "16 AGUSTUS 2026", "outlet": "GTS", "crewstore": "Taufik Hidayat", "selisih": -2500000, "keterangan": "Crewstore salah pelunasan, harusnya DP Big Order untuk tgl 17", "metode": "CASH", "kategori": "Salah Input DP / Pelunasan"},
+      {"id": 39, "bulan": "AGUSTUS", "minggu": "17 AGUSTUS 2026 - 23 AGUSTUS 2026", "tgl": "17 AGUSTUS 2026", "outlet": "TW", "crewstore": "Karenita Marta Sofia", "selisih": -20000, "keterangan": "Crewstore lebih input 2 Ori Kecil", "metode": "CASH", "kategori": "Lebih / Double Input"},
+      {"id": 40, "bulan": "AGUSTUS", "minggu": "17 AGUSTUS 2026 - 23 AGUSTUS 2026", "tgl": "17 AGUSTUS 2026", "outlet": "TW", "crewstore": "Karenita Marta Sofia", "selisih": -10000, "keterangan": "Crewstore lebih input 1 Ori Kecil", "metode": "QRIS", "kategori": "Lebih / Double Input"},
+      {"id": 41, "bulan": "AGUSTUS", "minggu": "17 AGUSTUS 2026 - 23 AGUSTUS 2026", "tgl": "17 AGUSTUS 2026", "outlet": "GAG", "crewstore": "Novriana Darmanik", "selisih": -20000, "keterangan": "Crewstore salah input metode pembayaran harusnya Qris Terinput Cash", "metode": "CASH & QRIS", "kategori": "Salah Metode Pembayaran"},
+      {"id": 42, "bulan": "AGUSTUS", "minggu": "17 AGUSTUS 2026 - 23 AGUSTUS 2026", "tgl": "18 AGUSTUS 2026", "outlet": "IMB", "crewstore": "Gusti Ngurah Komang Ari Prawira", "selisih": -30000, "keterangan": "Crewstore lebih input 3 Ori Kecil", "metode": "CASH", "kategori": "Lebih / Double Input"},
+      {"id": 43, "bulan": "AGUSTUS", "minggu": "17 AGUSTUS 2026 - 23 AGUSTUS 2026", "tgl": "20 AGUSTUS 2026", "outlet": "TPR", "crewstore": "Gusti Ngurah Komang Ari Prawira", "selisih": 20000, "keterangan": "Crewstore tidak input 2 Ori Kecil", "metode": "CASH", "kategori": "Tidak / Kurang Input"},
+      {"id": 44, "bulan": "AGUSTUS", "minggu": "17 AGUSTUS 2026 - 23 AGUSTUS 2026", "tgl": "20 AGUSTUS 2026", "outlet": "IMB", "crewstore": "Gusti Ngurah Komang Ari Prawira", "selisih": 70000, "keterangan": "Crewstore tidak input 2 Ori Besar dan 2 Durian Besar", "metode": "GOFOOD", "kategori": "Tidak / Kurang Input"},
+      {"id": 45, "bulan": "AGUSTUS", "minggu": "17 AGUSTUS 2026 - 23 AGUSTUS 2026", "tgl": "21 AGUSTUS 2026", "outlet": "TRI", "crewstore": "Verdian Syah", "selisih": 10000, "keterangan": "Crewstore tidak input Ori Kecil 1", "metode": "CASH", "kategori": "Tidak / Kurang Input"},
+      {"id": 46, "bulan": "AGUSTUS", "minggu": "17 AGUSTUS 2026 - 23 AGUSTUS 2026", "tgl": "21 AGUSTUS 2026", "outlet": "GAG", "crewstore": "I Kadek Aditya", "selisih": -20000, "keterangan": "Crewstore Salah input metode pembayaran harusnya Qris Terinput Cash", "metode": "CASH & QRIS", "kategori": "Salah Metode Pembayaran"},
+      {"id": 47, "bulan": "AGUSTUS", "minggu": "17 AGUSTUS 2026 - 23 AGUSTUS 2026", "tgl": "22 AGUSTUS 2026", "outlet": "IMB", "crewstore": "Gusti Ngurah Komang Ari Prawira", "selisih": 10000, "keterangan": "Crewstore tidak input Ori Kecil 1", "metode": "QRIS", "kategori": "Tidak / Kurang Input"},
+      {"id": 48, "bulan": "AGUSTUS", "minggu": "17 AGUSTUS 2026 - 23 AGUSTUS 2026", "tgl": "23 AGUSTUS 2026", "outlet": "AYN", "crewstore": "Putri Bunga", "selisih": -10000, "keterangan": "Uang omset yang terselip di modal", "metode": "CASH", "kategori": "Selisih Uang Fisik / Modal"},
+      {"id": 49, "bulan": "AGUSTUS", "minggu": "17 AGUSTUS 2026 - 23 AGUSTUS 2026", "tgl": "23 AGUSTUS 2026", "outlet": "TRI", "crewstore": "Priska", "selisih": -10000, "keterangan": "Crewstore salah input metode pembayaran harusnya Qris diinput Cash", "metode": "CASH & QRIS", "kategori": "Salah Metode Pembayaran"},
+      {"id": 50, "bulan": "AGUSTUS", "minggu": "17 AGUSTUS 2026 - 23 AGUSTUS 2026", "tgl": "23 AGUSTUS 2026", "outlet": "TRI", "crewstore": "Priska", "selisih": 10000, "keterangan": "Crewstore tidak input Ori Kecil 1", "metode": "QRIS", "kategori": "Tidak / Kurang Input"},
+      {"id": 51, "bulan": "AGUSTUS", "minggu": "17 AGUSTUS 2026 - 23 AGUSTUS 2026", "tgl": "23 AGUSTUS 2026", "outlet": "GLC", "crewstore": "Andini Dwi Rahmawati", "selisih": -2000, "keterangan": "Crewstore lebih input 2 ori kecil", "metode": "CASH", "kategori": "Lebih / Double Input"},
+      {"id": 52, "bulan": "AGUSTUS", "minggu": "17 AGUSTUS 2026 - 23 AGUSTUS 2026", "tgl": "23 AGUSTUS 2026", "outlet": "GLC", "crewstore": "Nadia Safira Zalyanti", "selisih": 10000, "keterangan": "Crewstore tidak input Ori Kecil 1", "metode": "QRIS", "kategori": "Tidak / Kurang Input"},
+      {"id": 53, "bulan": "AGUSTUS", "minggu": "17 AGUSTUS 2026 - 23 AGUSTUS 2026", "tgl": "23 AGUSTUS 2026", "outlet": "IMB", "crewstore": "Gusti Ngurah Komang Ari Prawira", "selisih": 5000, "keterangan": "Orderan Jus Jambu Besar 1 kosong di ganti Jus Mangga Kecil 1", "metode": "GOFOOD", "kategori": "Lainnya / No Reason"},
+      {"id": 54, "bulan": "AGUSTUS", "minggu": "17 AGUSTUS 2026 - 23 AGUSTUS 2026", "tgl": "23 AGUSTUS 2026", "outlet": "SST", "crewstore": "Erika Fajriatul", "selisih": 10000, "keterangan": "Crewstore kurang input Ori Kecil 1", "metode": "GOFOOD", "kategori": "Tidak / Kurang Input"},
+      {"id": 55, "bulan": "AGUSTUS", "minggu": "24 AGUSTUS 2026 - 31 AGUSTUS 2026", "tgl": "25 AGUSTUS 2026", "outlet": "DLG", "crewstore": "Qonita", "selisih": 50000, "keterangan": "Crewstore tidak input Ori Kecil 5", "metode": "SHOPEEFOOD", "kategori": "Tidak / Kurang Input"},
+      {"id": 56, "bulan": "AGUSTUS", "minggu": "24 AGUSTUS 2026 - 31 AGUSTUS 2026", "tgl": "26 AGUSTUS 2026", "outlet": "TW", "crewstore": "Evan Putra Bali Ngara", "selisih": 15000, "keterangan": "Crewstore tidak input 1 Ori Besar", "metode": "GOFOOD", "kategori": "Tidak / Kurang Input"},
+      {"id": 57, "bulan": "AGUSTUS", "minggu": "24 AGUSTUS 2026 - 31 AGUSTUS 2026", "tgl": "27 AGUSTUS 2026", "outlet": "IMB", "crewstore": "Gusti Ngurah Komang Ari Prawira", "selisih": 30000, "keterangan": "Crewstore tidak input 3 Ori Kecil", "metode": "CASH", "kategori": "Tidak / Kurang Input"},
+      {"id": 58, "bulan": "AGUSTUS", "minggu": "24 AGUSTUS 2026 - 31 AGUSTUS 2026", "tgl": "28 AGUSTUS 2026", "outlet": "GLC", "crewstore": "Gusti Ngurah Komang Ari Prawira", "selisih": 30000, "keterangan": "Crewstore tidak input 3 Ori Kecil", "metode": "QRIS", "kategori": "Tidak / Kurang Input"},
+      {"id": 59, "bulan": "AGUSTUS", "minggu": "24 AGUSTUS 2026 - 31 AGUSTUS 2026", "tgl": "29 AGUSTUS 2026", "outlet": "IMB", "crewstore": "Gusti Ngurah Komang Ari Prawira", "selisih": 25000, "keterangan": "Crewstore salah input metode pembayaran harusnya Qris diinput Cash", "metode": "CASH & QRIS", "kategori": "Salah Metode Pembayaran"},
+      {"id": 60, "bulan": "AGUSTUS", "minggu": "24 AGUSTUS 2026 - 31 AGUSTUS 2026", "tgl": "30 AGUSTUS 2026", "outlet": "GLC", "crewstore": "Nadia Safira Zalyanti", "selisih": 5000, "keterangan": "Uang modal terselip di omset", "metode": "CASH", "kategori": "Selisih Uang Fisik / Modal"},
+      {"id": 61, "bulan": "AGUSTUS", "minggu": "24 AGUSTUS 2026 - 31 AGUSTUS 2026", "tgl": "30 AGUSTUS 2026", "outlet": "NKB", "crewstore": "Intan Ulan", "selisih": -5000, "keterangan": "Crewstore salah input harusnya 1 Ori Besar terinput 1 Durian Besar", "metode": "SHOPEEFOOD", "kategori": "Salah Input Item / Ukuran"},
+      {"id": 62, "bulan": "AGUSTUS", "minggu": "24 AGUSTUS 2026 - 31 AGUSTUS 2026", "tgl": "30 AGUSTUS 2026", "outlet": "SST", "crewstore": "Evan Putra Bali Ngara", "selisih": 20000, "keterangan": "Crewstore salah input harusnya 2 Durian Besar terinput 2 Ori Kecil", "metode": "SHOPEEFOOD", "kategori": "Salah Input Item / Ukuran"},
+      {"id": 63, "bulan": "AGUSTUS", "minggu": "24 AGUSTUS 2026 - 31 AGUSTUS 2026", "tgl": "31 AGUSTUS 2026", "outlet": "ATS", "crewstore": "Taufik Hidayat", "selisih": -10000, "keterangan": "Omset terselip di uang modal", "metode": "CASH", "kategori": "Selisih Uang Fisik / Modal"},
+      {"id": 64, "bulan": "SEPTEMBER", "minggu": "1 - 6 SEPTEMBER 2026", "tgl": "1 SEPTEMBER 2026", "outlet": "SST", "crewstore": "Erika Fajriatul", "selisih": 15000, "keterangan": "Crewstore salah input metode pembayaran harusnya cash terinput qris", "metode": "CASH & QRIS", "kategori": "Salah Metode Pembayaran"},
+      {"id": 65, "bulan": "SEPTEMBER", "minggu": "1 - 6 SEPTEMBER 2026", "tgl": "1 SEPTEMBER 2026", "outlet": "GAG", "crewstore": "Novriana Darmanik", "selisih": 5000, "keterangan": "Crewstore salah input penjualan alpukat besar di input alpukat kecil", "metode": "CASH & QRIS", "kategori": "Salah Input Item / Ukuran"},
+      {"id": 66, "bulan": "SEPTEMBER", "minggu": "1 - 6 SEPTEMBER 2026", "tgl": "2 SEPTEMBER 2026", "outlet": "WTG", "crewstore": "Ni Made Ana Apsari", "selisih": 30000, "keterangan": "Crewstore tidak input 1 Durian Kecil 1 Ori besar", "metode": "GRABFOOD", "kategori": "Tidak / Kurang Input"},
+      {"id": 67, "bulan": "SEPTEMBER", "minggu": "1 - 6 SEPTEMBER 2026", "tgl": "2 SEPTEMBER 2026", "outlet": "AYN", "crewstore": "Gusti Ngurah Komang Ari Prawira", "selisih": -15000, "keterangan": "Pending transaksi diinput ulang 1 Ori Besar", "metode": "QRIS", "kategori": "Lebih / Double Input"},
+      {"id": 68, "bulan": "SEPTEMBER", "minggu": "1 - 6 SEPTEMBER 2026", "tgl": "3 SEPTEMBER 2026", "outlet": "AYN", "crewstore": "Yessy Novianti", "selisih": -25000, "keterangan": "Uang omset terselip di modal 20,000 dan 5,000 customer lebih bayar qris di ganti cash", "metode": "CASH & QRIS", "kategori": "Selisih Uang Fisik / Modal"},
+      {"id": 69, "bulan": "SEPTEMBER", "minggu": "1 - 6 SEPTEMBER 2026", "tgl": "3 SEPTEMBER 2026", "outlet": "AYN", "crewstore": "Gusti Ngurah Komang Ari Prawira", "selisih": 40000, "keterangan": "Crewstore tidak input 4 Ori Kecil", "metode": "GOFOOD", "kategori": "Tidak / Kurang Input"},
+      {"id": 70, "bulan": "SEPTEMBER", "minggu": "1 - 6 SEPTEMBER 2026", "tgl": "5 SEPTEMBER 2026", "outlet": "AYN", "crewstore": "Gusti Ngurah Komang Ari Prawira", "selisih": 15000, "keterangan": "Crewstore tidak input 1 Ori Besar", "metode": "CASH", "kategori": "Tidak / Kurang Input"},
+      {"id": 71, "bulan": "SEPTEMBER", "minggu": "1 - 6 SEPTEMBER 2026", "tgl": "5 SEPTEMBER 2026", "outlet": "TRI", "crewstore": "Priska", "selisih": 35000, "keterangan": "Crewstore tidak input 1 Durian Besar & 1 Jambu Besar", "metode": "SHOPEEFOOD", "kategori": "Tidak / Kurang Input"},
+      {"id": 72, "bulan": "SEPTEMBER", "minggu": "1 - 6 SEPTEMBER 2026", "tgl": "5 SEPTEMBER 2026", "outlet": "ATS", "crewstore": "Putu Sephia Aji Widiantari", "selisih": 15000, "keterangan": "Crewstore salah input metode pembayaran harusnya Gofood terinput Grabfood", "metode": "GRABFOOD", "kategori": "Salah Metode Pembayaran"},
+      {"id": 73, "bulan": "SEPTEMBER", "minggu": "7 - 13 SEPTEMBER 2026", "tgl": "7 SEPTEMBER 2026", "outlet": "GLC", "crewstore": "Nadia Safira Zalyanti", "selisih": 40000, "keterangan": "Crewstore tidak input Durian Besar 2", "metode": "SHOPEEFOOD", "kategori": "Tidak / Kurang Input"},
+      {"id": 74, "bulan": "SEPTEMBER", "minggu": "7 - 13 SEPTEMBER 2026", "tgl": "9 SEPTEMBER 2026", "outlet": "TPR", "crewstore": "Ratna Dinda Febiola", "selisih": 20000, "keterangan": "Crewstore salah input metode pembayaran harusnya cash terinput qris", "metode": "CASH & QRIS", "kategori": "Salah Metode Pembayaran"},
+      {"id": 75, "bulan": "SEPTEMBER", "minggu": "7 - 13 SEPTEMBER 2026", "tgl": "12 SEPTEMBER 2026", "outlet": "IMB", "crewstore": "Alya Dwi Anggaini", "selisih": 15000, "keterangan": "Crewstore tidak input 1 Ori Besar", "metode": "QRIS", "kategori": "Tidak / Kurang Input"},
+      {"id": 76, "bulan": "SEPTEMBER", "minggu": "14 - 20 SEPTEMBER 2026", "tgl": "14 SEPTEMBER 2026", "outlet": "IMB", "crewstore": "Anggung Savitri", "selisih": 20000, "keterangan": "Crewstore tidak input 1 Durian Besar", "metode": "GOFOOD", "kategori": "Tidak / Kurang Input"},
+      {"id": 77, "bulan": "SEPTEMBER", "minggu": "14 - 20 SEPTEMBER 2026", "tgl": "18 SEPTEMBER 2026", "outlet": "TPR", "crewstore": "Alya Dwi Anggaini", "selisih": 30000, "keterangan": "Crewstore tidak input 3 Ori Kecil", "metode": "QRIS", "kategori": "Tidak / Kurang Input"},
+      {"id": 78, "bulan": "SEPTEMBER", "minggu": "14 - 20 SEPTEMBER 2026", "tgl": "19 SEPTEMBER 2026", "outlet": "WTG", "crewstore": "Chintiya Dewi Hendrayani", "selisih": 15000, "keterangan": "Crewstore lupa input 1 Ori Besar", "metode": "CASH", "kategori": "Tidak / Kurang Input"},
+      {"id": 79, "bulan": "SEPTEMBER", "minggu": "21 - 27 SEPTEMBER 2026", "tgl": "22 SEPTEMBER 2026", "outlet": "GLC", "crewstore": "Nadia Safira Zalyanti", "selisih": -10000, "keterangan": "Crewstore tidak cek saat custober kurang bayar", "metode": "QRIS", "kategori": "Selisih Uang Fisik / Modal"},
+      {"id": 80, "bulan": "SEPTEMBER", "minggu": "21 - 27 SEPTEMBER 2026", "tgl": "27 SEPTEMBER 2026", "outlet": "WTG", "crewstore": "Chintiya Dewi Hendrayani", "selisih": 15000, "keterangan": "Crewstore salah input metode pembayaran harusnya Grabfood diinput Gofood", "metode": "GOFOOD & GRABFOOD", "kategori": "Salah Metode Pembayaran"},
+      {"id": 81, "bulan": "OKTOBER", "minggu": "28 SEPTEMBER - 4 OKTOBER 2026", "tgl": "28 SEPTEMBER 2026", "outlet": "GLC", "crewstore": "Ladila Putri Latif", "selisih": 20000, "keterangan": "Crewstore tidak input 1 Durian Besar", "metode": "GOFOOD", "kategori": "Tidak / Kurang Input"},
+      {"id": 82, "bulan": "OKTOBER", "minggu": "28 SEPTEMBER - 4 OKTOBER 2026", "tgl": "29 SEPTEMBER 2026", "outlet": "IMB", "crewstore": "Anggung Savitri", "selisih": 15000, "keterangan": "Crewstore salah input metode pembayaran harusnya Gofood terinput Grabfood", "metode": "GOFOOD & GRABFOOD", "kategori": "Salah Metode Pembayaran"},
+      {"id": 83, "bulan": "OKTOBER", "minggu": "28 SEPTEMBER - 4 OKTOBER 2026", "tgl": "30 SEPTEMBER 2026", "outlet": "AYN", "crewstore": "Laili Ramadhani", "selisih": 10000, "keterangan": "Crewstore salah memberi kembalian customer", "metode": "CASH", "kategori": "Selisih Uang Fisik / Modal"},
+      {"id": 84, "bulan": "OKTOBER", "minggu": "28 SEPTEMBER - 4 OKTOBER 2026", "tgl": "01 OKTOBER 2026", "outlet": "GAG", "crewstore": "Novriana Darmanik", "selisih": 25000, "keterangan": "Crewstore tidak input 1 Jus Durian Besar dan 1 Ori Kecil", "metode": "GOFOOD", "kategori": "Tidak / Kurang Input"},
+      {"id": 85, "bulan": "OKTOBER", "minggu": "28 SEPTEMBER - 4 OKTOBER 2026", "tgl": "02 OKTOBER 2026", "outlet": "DLG", "crewstore": "Ghifara Hidayatul Maulida", "selisih": -5000, "keterangan": "Crewstore salah input, seharusnya 1 Capcin Kecil ter-input 1 Capcin Besar", "metode": "SHOPEEFOOD", "kategori": "Salah Input Item / Ukuran"},
+      {"id": 86, "bulan": "OKTOBER", "minggu": "28 SEPTEMBER - 4 OKTOBER 2026", "tgl": "03 OKTOBER 2026", "outlet": "IMB", "crewstore": "Popyliana Bozu Pati", "selisih": -5000, "keterangan": "Crewstore salah input, seharusnya 2 ori besar ter-input 3 ori besar & seharusnya 2 jus alpukat kecil ter-input 1 jus alpukat kecil", "metode": "GOFOOD", "kategori": "Salah Input Item / Ukuran"},
+      {"id": 87, "bulan": "OKTOBER", "minggu": "28 SEPTEMBER - 4 OKTOBER 2026", "tgl": "04 OKTOBER 2026", "outlet": "GLC", "crewstore": "Andini Dwi Rahmawati", "selisih": 10000, "keterangan": "Uang crewstore nombok karena salah hitung", "metode": "CASH", "kategori": "Selisih Uang Fisik / Modal"},
+      {"id": 88, "bulan": "OKTOBER", "minggu": "28 SEPTEMBER - 4 OKTOBER 2026", "tgl": "04 OKTOBER 2026", "outlet": "PMG", "crewstore": "Fani Amelia Syam", "selisih": 15000, "keterangan": "Crewstore tidak input 1 Ori Besar", "metode": "QRIS", "kategori": "Tidak / Kurang Input"},
+      {"id": 89, "bulan": "OKTOBER", "minggu": "28 SEPTEMBER - 4 OKTOBER 2026", "tgl": "04 OKTOBER 2026", "outlet": "IMB", "crewstore": "Popyliana Bozu Pati", "selisih": -10000, "keterangan": "Crewstore salah input harusnya 1 Ori Kecil & 1 Durian Kecil terinput 1 Ori Besar & 1 Durian Besar", "metode": "SHOPEEFOOD", "kategori": "Salah Input Item / Ukuran"},
+      {"id": 90, "bulan": "OKTOBER", "minggu": "5 - 11 OKTOBER 2026", "tgl": "6 OKTOBER 2026", "outlet": "TW", "crewstore": "Ni Made Ana Apsari", "selisih": -10000, "keterangan": "Crewstore tidak mengcek saat customer kurang bayar", "metode": "QRIS", "kategori": "Selisih Uang Fisik / Modal"},
+      {"id": 91, "bulan": "OKTOBER", "minggu": "5 - 11 OKTOBER 2026", "tgl": "6 OKTOBER 2026", "outlet": "NKB", "crewstore": "Nadia Safira Zalyanti", "selisih": 10000, "keterangan": "Uang modal keselip omset", "metode": "CASH", "kategori": "Selisih Uang Fisik / Modal"},
+      {"id": 92, "bulan": "OKTOBER", "minggu": "12 - 18 OKTOBER 2026", "tgl": "13 OKTOBER 2026", "outlet": "TPR", "crewstore": "Ladila Putri", "selisih": -30000, "keterangan": "Crewstore salah memberikan kembalian", "metode": "CASH", "kategori": "Selisih Uang Fisik / Modal"},
+      {"id": 93, "bulan": "OKTOBER", "minggu": "12 - 18 OKTOBER 2026", "tgl": "17 OKTOBER 2026", "outlet": "IMB", "crewstore": "Rifaldo", "selisih": 15000, "keterangan": "Crewstore tidak input Durian kecil 1", "metode": "QRIS", "kategori": "Tidak / Kurang Input"},
+      {"id": 94, "bulan": "OKTOBER", "minggu": "19 - 25 OKTOBER 2026", "tgl": "22 OKTOBER 2026", "outlet": "TPR", "crewstore": "Alya Dwi Anggaini", "selisih": 10000, "keterangan": "Crewstore salah hitung uang omset sehingga nombok", "metode": "CASH", "kategori": "Selisih Uang Fisik / Modal"},
+      {"id": 95, "bulan": "OKTOBER", "minggu": "19 - 25 OKTOBER 2026", "tgl": "22 OKTOBER 2026", "outlet": "KPN", "crewstore": "Rifaldo", "selisih": -10000, "keterangan": "Uang omset terselip ke modal", "metode": "CASH", "kategori": "Selisih Uang Fisik / Modal"},
+      {"id": 96, "bulan": "OKTOBER", "minggu": "19 - 25 OKTOBER 2026", "tgl": "22 OKTOBER 2026", "outlet": "TPR", "crewstore": "Ladila Putri", "selisih": -5000, "keterangan": "Crewstore salah input 1 es teler durian besar harusnya 1 jus durian besar", "metode": "SHOPEEFOOD", "kategori": "Salah Input Item / Ukuran"},
+      {"id": 97, "bulan": "OKTOBER", "minggu": "19 - 25 OKTOBER 2026", "tgl": "23 OKTOBER 2026", "outlet": "KPN", "crewstore": "Rifaldo", "selisih": 10000, "keterangan": "Uang ganti omset terselip ke modal kemarin", "metode": "CASH", "kategori": "Selisih Uang Fisik / Modal"},
+      {"id": 98, "bulan": "OKTOBER", "minggu": "19 - 25 OKTOBER 2026", "tgl": "23 OKTOBER 2026", "outlet": "GLC", "crewstore": "Intan Tirta Dewi", "selisih": 15000, "keterangan": "Crewstore salah input metode pembayaran harusnya shopeefood terinput gofood", "metode": "GOFOOD & SHOPEEFOOD", "kategori": "Salah Metode Pembayaran"},
+      {"id": 99, "bulan": "OKTOBER", "minggu": "19 - 25 OKTOBER 2026", "tgl": "24 OKTOBER 2026", "outlet": "GLC", "crewstore": "Intan Tirta Dewi", "selisih": -15000, "keterangan": "Crewstore Lebih input 1 Ori Besar", "metode": "CASH", "kategori": "Lebih / Double Input"},
+      {"id": 100, "bulan": "OKTOBER", "minggu": "19 - 25 OKTOBER 2026", "tgl": "24 OKTOBER 2026", "outlet": "GLC", "crewstore": "Intan Tirta Dewi", "selisih": -25000, "keterangan": "Crewstore Double input 1 Ori Kecil & 1 Durian Kecil, Transaksi sudah ter input cash diinput kembali ke Qris", "metode": "QRIS", "kategori": "Lebih / Double Input"},
+      {"id": 101, "bulan": "OKTOBER", "minggu": "19 - 25 OKTOBER 2026", "tgl": "25 OKTOBER 2026", "outlet": "ATS", "crewstore": "Taufik Hidayat", "selisih": 20000, "keterangan": "Crewstore tidak input 2 Ori Kecil", "metode": "CASH", "kategori": "Tidak / Kurang Input"},
+      {"id": 102, "bulan": "OKTOBER", "minggu": "26 OKTOBER- 1 NOVEMBER 2026", "tgl": "26 OKTOBER 2026", "outlet": "ATS", "crewstore": "Abdul Halim Al Ghani", "selisih": 11000, "keterangan": "Uang modal terselip di omset", "metode": "CASH", "kategori": "Selisih Uang Fisik / Modal"},
+      {"id": 103, "bulan": "OKTOBER", "minggu": "26 OKTOBER- 1 NOVEMBER 2026", "tgl": "28 OKTOBER 2026", "outlet": "TPR", "crewstore": "Dina Rahmawati", "selisih": -40000, "keterangan": "Crewstore salah input metode pembayaran harusnya Cash terinput Qris", "metode": "CASH & QRIS", "kategori": "Salah Metode Pembayaran"},
+      {"id": 104, "bulan": "OKTOBER", "minggu": "26 OKTOBER- 1 NOVEMBER 2026", "tgl": "28 OKTOBER 2026", "outlet": "PMG", "crewstore": "Febiola", "selisih": -39000, "keterangan": "No reasson diganti Crewstore", "metode": "CASH", "kategori": "Lainnya / No Reason"},
+      {"id": 105, "bulan": "OKTOBER", "minggu": "26 OKTOBER- 1 NOVEMBER 2026", "tgl": "28 OKTOBER 2026", "outlet": "GLC", "crewstore": "Intan Tirta Dewi", "selisih": -10000, "keterangan": "Uang omset terselip ke modal", "metode": "CASH", "kategori": "Selisih Uang Fisik / Modal"},
+      {"id": 106, "bulan": "OKTOBER", "minggu": "26 OKTOBER- 1 NOVEMBER 2026", "tgl": "29 OKTOBER 2026", "outlet": "PMG", "crewstore": "Intan Tirta Dewi", "selisih": 30000, "keterangan": "Crewstore salah input metode pembayaran harusnya Qris terinput cash", "metode": "CASH & QRIS", "kategori": "Salah Metode Pembayaran"},
+      {"id": 107, "bulan": "OKTOBER", "minggu": "26 OKTOBER- 1 NOVEMBER 2026", "tgl": "29 OKTOBER 2026", "outlet": "ATS", "crewstore": "Abdul Halim Al Ghani", "selisih": 20000, "keterangan": "Crewstore tidak input 2 Ori Kecil", "metode": "QRIS", "kategori": "Tidak / Kurang Input"},
+      {"id": 108, "bulan": "OKTOBER", "minggu": "26 OKTOBER- 1 NOVEMBER 2026", "tgl": "30 OKTOBER 2026", "outlet": "SST", "crewstore": "Berlian Winartika Sari", "selisih": -10000, "keterangan": "uang omset keselip modal", "metode": "CASH", "kategori": "Selisih Uang Fisik / Modal"},
+      {"id": 109, "bulan": "OKTOBER", "minggu": "26 OKTOBER- 1 NOVEMBER 2026", "tgl": "30 OKTOBER 2026", "outlet": "ATS", "crewstore": "Krista Kelvina Erysa", "selisih": -35000, "keterangan": "Transaksi sudah di void tetapi tidak di klik Void Approve", "metode": "CASH", "kategori": "Void Belum Approve"},
+      {"id": 110, "bulan": "OKTOBER", "minggu": "26 OKTOBER- 1 NOVEMBER 2026", "tgl": "1 NOVEMBER 2026", "outlet": "TPR", "crewstore": "Alya Dwi Anggaini", "selisih": -10000, "keterangan": "Transaksi sudah di void tetapi tidak di klik Void Aprrove", "metode": "QRIS", "kategori": "Void Belum Approve"},
+      {"id": 111, "bulan": "OKTOBER", "minggu": "26 OKTOBER- 1 NOVEMBER 2026", "tgl": "1 NOVEMBER 2026", "outlet": "TPR", "crewstore": "Alya Dwi Anggaini", "selisih": 25000, "keterangan": "Crewstore tidak input 1 Jus Mangga Besar & 1 Jus Strawberry kecil", "metode": "GOFOOD", "kategori": "Tidak / Kurang Input"},
+      {"id": 112, "bulan": "OKTOBER", "minggu": "26 OKTOBER- 1 NOVEMBER 2026", "tgl": "1 NOVEMBER 2026", "outlet": "GLC", "crewstore": "Nadia Safira Zalyanti", "selisih": -30000, "keterangan": "Transaksi sudah di void tetapi tidak di klik Void Aprrove", "metode": "GOFOOD", "kategori": "Void Belum Approve"},
+      {"id": 113, "bulan": "OKTOBER", "minggu": "26 OKTOBER- 1 NOVEMBER 2026", "tgl": "1 NOVEMBER 2026", "outlet": "SST", "crewstore": "Berlian Winartika Sari", "selisih": 120000, "keterangan": "Crewstore tidak input 12 Ori Kecil", "metode": "GRABFOOD", "kategori": "Tidak / Kurang Input"},
+      {"id": 114, "bulan": "NOVEMBER", "minggu": "2 - 8 NOVEMBER 2026", "tgl": "2 NOVEMBER 2026", "outlet": "PMG", "crewstore": "Etty Yunior Manduapessy", "selisih": 30000, "keterangan": "Crewstore salah input metode pembayaran harusnya Qris terinput cash", "metode": "CASH & QRIS", "kategori": "Salah Metode Pembayaran"},
+      {"id": 115, "bulan": "NOVEMBER", "minggu": "2 - 8 NOVEMBER 2026", "tgl": "3 NOVEMBER 2026", "outlet": "IMB", "crewstore": "Intan Tirta Dewi", "selisih": 15000, "keterangan": "Crewstore tidak input 1 Durian Kecil", "metode": "QRIS", "kategori": "Tidak / Kurang Input"},
+      {"id": 116, "bulan": "NOVEMBER", "minggu": "2 - 8 NOVEMBER 2026", "tgl": "4 NOVEMBER 2026", "outlet": "GLC", "crewstore": "Intan Tirta Dewi", "selisih": 135000, "keterangan": "Crewstore lupa input 9 ori besar", "metode": "GRABFOOD", "kategori": "Tidak / Kurang Input"},
+      {"id": 117, "bulan": "NOVEMBER", "minggu": "2 - 8 NOVEMBER 2026", "tgl": "6 NOVEMBER 2026", "outlet": "KPN", "crewstore": "Citra Amelia", "selisih": -5000, "keterangan": "Customer kurang bayar di ganti crewstore", "metode": "QRIS", "kategori": "Selisih Uang Fisik / Modal"},
+      {"id": 118, "bulan": "NOVEMBER", "minggu": "2 - 8 NOVEMBER 2026", "tgl": "6 NOVEMBER 2026", "outlet": "GLC", "crewstore": "Intan Tirta Dewi", "selisih": 10000, "keterangan": "Crewstore salah input metode pembayaran harusnya Qris terinput Cash", "metode": "CASH & QRIS", "kategori": "Salah Metode Pembayaran"},
+      {"id": 119, "bulan": "NOVEMBER", "minggu": "2 - 8 NOVEMBER 2026", "tgl": "7 NOVEMBER 2026", "outlet": "TPR", "crewstore": "Dina Rahmawati", "selisih": -30000, "keterangan": "Transaksi sudah di void belum di klik Approved oleh crew", "metode": "CASH", "kategori": "Void Belum Approve"},
+      {"id": 120, "bulan": "NOVEMBER", "minggu": "2 - 8 NOVEMBER 2026", "tgl": "8 NOVEMBER 2026", "outlet": "AYN", "crewstore": "Yeni Setiawati", "selisih": -50000, "keterangan": "Transaksi sudah di void belum di klik Approved oleh crew", "metode": "GOFOOD", "kategori": "Void Belum Approve"},
+      {"id": 121, "bulan": "NOVEMBER", "minggu": "9 - 15 NOVEMBER 2026", "tgl": "9 NOVEMBER 2026", "outlet": "KBA", "crewstore": "Keyza Marissa", "selisih": 40000, "keterangan": "Crewstore salah input metode pembayaran harusnya Qris terinput cash", "metode": "CASH & QRIS", "kategori": "Salah Metode Pembayaran"},
+      {"id": 122, "bulan": "NOVEMBER", "minggu": "9 - 15 NOVEMBER 2026", "tgl": "10 NOVEMBER 2026", "outlet": "AYN", "crewstore": "Falensia Terejina Maak", "selisih": -10000, "keterangan": "No reasson diganti crewstore", "metode": "CASH", "kategori": "Lainnya / No Reason"},
+      {"id": 123, "bulan": "NOVEMBER", "minggu": "9 - 15 NOVEMBER 2026", "tgl": "11 NOVEMBER 2026", "outlet": "AYN", "crewstore": "Yessy Novianti", "selisih": 340000, "keterangan": "crewstore salah pelunasan DP harusnya TF di lunasi Cash", "metode": "CASH", "kategori": "Salah Input DP / Pelunasan"},
+      {"id": 124, "bulan": "NOVEMBER", "minggu": "9 - 15 NOVEMBER 2026", "tgl": "12 NOVEMBER 2026", "outlet": "AYN", "crewstore": "Elifinalia", "selisih": -50000, "keterangan": "Crewstore tidak cek saat Qris customer belum masuk", "metode": "QRIS", "kategori": "Lainnya / No Reason"},
+      {"id": 125, "bulan": "NOVEMBER", "minggu": "9 - 15 NOVEMBER 2026", "tgl": "13 NOVEMBER 2026", "outlet": "KRB", "crewstore": "Clarisma Ayuning Dyah Sejati", "selisih": 30000, "keterangan": "Crewstore salah input metode pembayaran harusnya Qris terinput cash", "metode": "CASH & QRIS", "kategori": "Salah Metode Pembayaran"},
+      {"id": 126, "bulan": "NOVEMBER", "minggu": "9 - 15 NOVEMBER 2026", "tgl": "14 NOVEMBER 2026", "outlet": "WTG", "crewstore": "Karenita Marta Sofia", "selisih": -15000, "keterangan": "Crewstore double input Jus Durian Besar", "metode": "GOFOOD", "kategori": "Lebih / Double Input"},
+      {"id": 127, "bulan": "NOVEMBER", "minggu": "9 - 15 NOVEMBER 2026", "tgl": "14 NOVEMBER 2026", "outlet": "PMY", "crewstore": "Keyza Marissa", "selisih": 30000, "keterangan": "Crewstore salah input metode pembayaran harusnya Qris terinput cash", "metode": "CASH & QRIS", "kategori": "Salah Metode Pembayaran"},
+      {"id": 128, "bulan": "NOVEMBER", "minggu": "9 - 15 NOVEMBER 2026", "tgl": "14 NOVEMBER 2026", "outlet": "WTG", "crewstore": "Chintiya Dewi Hendrayani", "selisih": 20000, "keterangan": "Omset tertinggal di cash drawer", "metode": "CASH", "kategori": "Selisih Uang Fisik / Modal"},
+      {"id": 129, "bulan": "NOVEMBER", "minggu": "9 - 15 NOVEMBER 2026", "tgl": "14 NOVEMBER 2026", "outlet": "PMG", "crewstore": "Sofia Dawing", "selisih": 10000, "keterangan": "Omset tertinggal di cash drawer", "metode": "CASH", "kategori": "Selisih Uang Fisik / Modal"},
+      {"id": 130, "bulan": "NOVEMBER", "minggu": "9 - 15 NOVEMBER 2026", "tgl": "14 NOVEMBER 2026", "outlet": "TPR", "crewstore": "Alya Dwi Anggaini", "selisih": 10000, "keterangan": "Omset tertinggal di cash drawer", "metode": "CASH", "kategori": "Selisih Uang Fisik / Modal"},
+      {"id": 131, "bulan": "NOVEMBER", "minggu": "9 - 15 NOVEMBER 2026", "tgl": "15 NOVEMBER 2026", "outlet": "TRI", "crewstore": "Dian Novita", "selisih": 10000, "keterangan": "Crewstore salah input harusnya 2 Durian kecil terinput 2 Ori Kecil", "metode": "GOFOOD", "kategori": "Salah Input Item / Ukuran"},
+      {"id": 132, "bulan": "NOVEMBER", "minggu": "9 - 15 NOVEMBER 2026", "tgl": "15 NOVEMBER 2026", "outlet": "AYN", "crewstore": "Yeni Setiawati", "selisih": 20000, "keterangan": "No reasson diganti crewstore", "metode": "CASH", "kategori": "Lainnya / No Reason"},
+      {"id": 133, "bulan": "NOVEMBER", "minggu": "16 - 22 NOVEMBER 2026", "tgl": "16 NOVEMBER 2026", "outlet": "PMY", "crewstore": "Keyza Marissa Simatupang", "selisih": -15000, "keterangan": "Transaksi sudah di void belum klik Approve", "metode": "CASH", "kategori": "Void Belum Approve"},
+      {"id": 134, "bulan": "NOVEMBER", "minggu": "16 - 22 NOVEMBER 2026", "tgl": "16 NOVEMBER 2026", "outlet": "GTS", "crewstore": "Amelia Rizki Anggraeni", "selisih": 5000, "keterangan": "Crewstore salah input harusnya Jus Blackbery besar terinput Jus Strawbery Kecil", "metode": "GOFOOD", "kategori": "Salah Input Item / Ukuran"},
+      {"id": 135, "bulan": "NOVEMBER", "minggu": "16 - 22 NOVEMBER 2026", "tgl": "18 NOVEMBER 2026", "outlet": "KPN", "crewstore": "Nadia Safira Zalyanti", "selisih": -10000, "keterangan": "Crewstore salah login outlet", "metode": "CASH", "kategori": "Lainnya / No Reason"},
+      {"id": 136, "bulan": "NOVEMBER", "minggu": "16 - 22 NOVEMBER 2026", "tgl": "20 NOVEMBER 2026", "outlet": "TPR", "crewstore": "Alya Dwi Anggaini", "selisih": 500000, "keterangan": "Crewstore salah pelunasan seharusny Qris Diinput TF", "metode": "QRIS", "kategori": "Salah Input DP / Pelunasan"},
+      {"id": 137, "bulan": "NOVEMBER", "minggu": "16 - 22 NOVEMBER 2026", "tgl": "21 NOVEMBER 2026", "outlet": "TRI", "crewstore": "Dian Novita", "selisih": 10000, "keterangan": "Crewstore salah input metode pembayaran harusnya Qris terinput Cash", "metode": "CASH & QRIS", "kategori": "Salah Metode Pembayaran"},
+      {"id": 138, "bulan": "NOVEMBER", "minggu": "16 - 22 NOVEMBER 2026", "tgl": "21 NOVEMBER 2026", "outlet": "KBA", "crewstore": "Christian mazmur", "selisih": 20000, "keterangan": "Crewstore kurang input 1 Durian Besar", "metode": "CASH", "kategori": "Tidak / Kurang Input"},
+      {"id": 139, "bulan": "NOVEMBER", "minggu": "16 - 22 NOVEMBER 2026", "tgl": "22 NOVEMBER 2026", "outlet": "TRI", "crewstore": "Priska", "selisih": -5000, "keterangan": "Crewstore salah input penjualan harusnya Ori Kecil diinput Durian Kecil", "metode": "QRIS", "kategori": "Salah Input Item / Ukuran"}
+    ];
+
+    const MONTH_MAP = {
+      'JANUARI': 1, 'FEBRUARI': 2, 'MARET': 3, 'APRIL': 4, 'MEI': 5, 'JUNI': 6,
+      'JULI': 7, 'AGUSTUS': 8, 'SEPTEMBER': 9, 'OKTOBER': 10, 'NOVEMBER': 11, 'DESEMBER': 12
+    };
+    const MONTH_REV = {
+      1: 'JANUARI', 2: 'FEBRUARI', 3: 'MARET', 4: 'APRIL', 5: 'MEI', 6: 'JUNI',
+      7: 'JULI', 8: 'AGUSTUS', 9: 'SEPTEMBER', 10: 'OKTOBER', 11: 'NOVEMBER', 12: 'DESEMBER'
+    };
+
+    function parseIndoDateToISO(tglStr) {
+      if (!tglStr) return '';
+      const parts = tglStr.trim().toUpperCase().split(/\s+/);
+      if (parts.length < 3) return '';
+      const day = parts[0].padStart(2, '0');
+      const month = String(MONTH_MAP[parts[1]] || 0).padStart(2, '0');
+      const year = parts[2];
+      if (month === '00') return '';
+      return `${year}-${month}-${day}`;
+    }
+
+    function formatISOToIndoDate(isoStr) {
+      if (!isoStr) return 'ALL';
+      const [y, m, d] = isoStr.split('-');
+      const dayNum = parseInt(d, 10);
+      const monthName = MONTH_REV[parseInt(m, 10)] || '';
+      return `${dayNum} ${monthName} ${y}`;
+    }
+
+    function formatRupiah(num, withSign = false) {
+      const abs = Math.abs(num);
+      const formatted = 'Rp ' + abs.toLocaleString('id-ID');
+      if (!withSign) return num < 0 ? '-' + formatted : formatted;
+      if (num > 0) return '+' + formatted;
+      if (num < 0) return '-' + formatted;
+      return 'Rp 0';
+    }
+
+    function showToast(msg, isError = false) {
+      const toast = document.getElementById('toast');
+      const icon = document.getElementById('toast-icon');
+      const text = document.getElementById('toast-message');
+      text.textContent = msg;
+      icon.className = isError ? 'w-2.5 h-2.5 rounded-full bg-rose-400' : 'w-2.5 h-2.5 rounded-full bg-purple-400';
+      toast.classList.remove('hidden');
+      requestAnimationFrame(() => {
+        toast.classList.remove('translate-y-4', 'opacity-0');
+      });
+      setTimeout(() => {
+        toast.classList.add('translate-y-4', 'opacity-0');
+        setTimeout(() => toast.classList.add('hidden'), 300);
+      }, 3000);
+    }
+
+    // Load saved data from localStorage if available
+    function loadStoredState() {
+      try {
+        const savedRecords = localStorage.getItem('ets_selisih_records_v1');
+        if (savedRecords) {
+          const parsed = JSON.parse(savedRecords);
+          if (Array.isArray(parsed) && parsed.length > 0) appState.data = parsed;
+        }
+        const savedOutlets = localStorage.getItem('ets_custom_outlets_v1');
+        if (savedOutlets) {
+          const parsedO = JSON.parse(savedOutlets);
+          if (Array.isArray(parsedO)) appState.customOutlets = parsedO;
+        }
+      } catch (e) {
+        console.warn('LocalStorage tidak tersedia:', e);
+      }
+    }
+
+    function saveStoredState() {
+      try {
+        localStorage.setItem('ets_selisih_records_v1', JSON.stringify(appState.data));
+        localStorage.setItem('ets_custom_outlets_v1', JSON.stringify(appState.customOutlets));
+      } catch (e) {}
+    }
+
+    let appState = {
+      data: [...INITIAL_RECORDS],
+      customOutlets: [],
+      filters: {
+        bulan: 'ALL',
+        tglMulai: '',
+        tglAkhir: '',
+        outlet: 'ALL',
+        metode: 'ALL',
+        kategori: 'ALL',
+        tipe: 'ALL',
+        search: '',
+        minNominal: 0
+      },
+      activePreset: 'ALL',
+      activeTab: 'overview',
+      editingOutlet: null,
+      editingCrew: null,
+      sort: { field: 'id', dir: 'asc' },
+      pagination: { page: 1, perPage: 15 },
+      charts: {}
+    };
+
+    function getAllOutlets() {
+      const set = new Set([
+        ...appState.data.map(d => d.outlet),
+        ...appState.customOutlets
+      ]);
+      return Array.from(set).filter(Boolean).sort();
+    }
+
+    function populateFilterOptions() {
+      // Outlets
+      const outlets = getAllOutlets();
+      const outletSelect = document.getElementById('filter-outlet');
+      const currentOutlet = outletSelect.value;
+      outletSelect.innerHTML = `<option value="ALL">Semua Outlet (${outlets.length})</option>` +
+        outlets.map(o => `<option value="${o}">${o}</option>`).join('');
+      if (outlets.includes(currentOutlet)) outletSelect.value = currentOutlet;
+
+      // Datalist for Add Modal
+      const datalist = document.getElementById('outlet-datalist');
+      if (datalist) {
+        datalist.innerHTML = outlets.map(o => `<option value="${o}">`).join('');
+      }
+
+      // Metode
+      const metodes = Array.from(new Set(appState.data.map(d => d.metode))).sort();
+      const metodeSelect = document.getElementById('filter-metode');
+      const currentMetode = metodeSelect.value;
+      metodeSelect.innerHTML = `<option value="ALL">Semua Metode</option>` +
+        metodes.map(m => `<option value="${m}">${m}</option>`).join('');
+      if (metodes.includes(currentMetode)) metodeSelect.value = currentMetode;
+
+      // Kategori
+      const kategoris = Array.from(new Set(appState.data.map(d => d.kategori))).sort();
+      const katSelect = document.getElementById('filter-kategori');
+      const currentKat = katSelect.value;
+      katSelect.innerHTML = `<option value="ALL">Semua Kategori Kesalahan</option>` +
+        kategoris.map(k => `<option value="${k}">${k}</option>`).join('');
+      if (kategoris.includes(currentKat)) katSelect.value = currentKat;
+    }
+
+    function clearDateRange() {
+      appState.filters.tglMulai = '';
+      appState.filters.tglAkhir = '';
+      document.getElementById('filter-tgl-mulai').value = '';
+      document.getElementById('filter-tgl-akhir').value = '';
+      updateDateRangeBadge();
+      appState.pagination.page = 1;
+      renderAll();
+    }
+
+    function updateDateRangeBadge() {
+      const badge = document.getElementById('active-date-range-badge');
+      const { tglMulai, tglAkhir } = appState.filters;
+      if (tglMulai || tglAkhir) {
+        const startLabel = tglMulai ? formatISOToIndoDate(tglMulai) : 'Awal Data';
+        const endLabel = tglAkhir ? formatISOToIndoDate(tglAkhir) : 'Akhir Data';
+        badge.textContent = `Rentang Aktif: ${startLabel} s/d ${endLabel}`;
+        badge.classList.remove('hidden');
+      } else {
+        badge.classList.add('hidden');
+      }
+    }
+
+    function applyQuickPreset(preset) {
+      appState.activePreset = preset;
+      appState.filters.bulan = 'ALL';
+      appState.filters.tglMulai = '';
+      appState.filters.tglAkhir = '';
+      appState.filters.outlet = 'ALL';
+      appState.filters.metode = 'ALL';
+      appState.filters.kategori = 'ALL';
+      appState.filters.tipe = 'ALL';
+      appState.filters.search = '';
+      appState.filters.minNominal = 0;
+
+      if (preset === 'MINUS') appState.filters.tipe = 'MINUS';
+      else if (preset === 'PLUS') appState.filters.tipe = 'PLUS';
+      else if (preset === 'BIG') appState.filters.minNominal = 50000;
+      else if (preset === 'VOID') appState.filters.kategori = 'Void Belum Approve';
+
+      document.getElementById('filter-bulan').value = 'ALL';
+      populateFilterOptions();
+      document.getElementById('filter-tgl-mulai').value = '';
+      document.getElementById('filter-tgl-akhir').value = '';
+      document.getElementById('filter-outlet').value = 'ALL';
+      document.getElementById('filter-metode').value = 'ALL';
+      document.getElementById('filter-kategori').value = appState.filters.kategori;
+      document.getElementById('filter-search').value = '';
+      updateDateRangeBadge();
+
+      updateQuickChipStyles();
+      appState.pagination.page = 1;
+      renderAll();
+    }
+
+    function updateQuickChipStyles() {
+      document.querySelectorAll('.quick-chip').forEach(btn => {
+        const isActive = btn.dataset.preset === appState.activePreset;
+        if (isActive) {
+          btn.className = 'quick-chip px-3 py-1 rounded-full text-xs font-semibold bg-purple-700 text-white shadow-sm transition';
+        } else {
+          btn.className = 'quick-chip px-3 py-1 rounded-full text-xs font-semibold bg-slate-100 hover:bg-purple-100 text-slate-700 dark:bg-slate-800 dark:hover:bg-slate-700 dark:text-slate-300 transition';
+        }
+      });
+    }
+
+    function resetFilters() {
+      applyQuickPreset('ALL');
+      showToast('Semua filter telah direset');
+    }
+
+    function getFilteredData() {
+      return appState.data.filter(item => {
+        if (appState.filters.bulan !== 'ALL' && item.bulan !== appState.filters.bulan) return false;
+        
+        if (appState.filters.tglMulai || appState.filters.tglAkhir) {
+          const itemISO = parseIndoDateToISO(item.tgl);
+          if (!itemISO) return false;
+          if (appState.filters.tglMulai && itemISO < appState.filters.tglMulai) return false;
+          if (appState.filters.tglAkhir && itemISO > appState.filters.tglAkhir) return false;
+        }
+
+        if (appState.filters.outlet !== 'ALL' && item.outlet !== appState.filters.outlet) return false;
+        if (appState.filters.metode !== 'ALL' && item.metode !== appState.filters.metode) return false;
+        if (appState.filters.kategori !== 'ALL' && item.kategori !== appState.filters.kategori) return false;
+        if (appState.filters.tipe === 'PLUS' && item.selisih <= 0) return false;
+        if (appState.filters.tipe === 'MINUS' && item.selisih >= 0) return false;
+        if (appState.filters.minNominal > 0 && Math.abs(item.selisih) < appState.filters.minNominal) return false;
+        if (appState.filters.search.trim() !== '') {
+          const q = appState.filters.search.toLowerCase();
+          if (!item.crewstore.toLowerCase().includes(q) &&
+              !item.keterangan.toLowerCase().includes(q) &&
+              !item.outlet.toLowerCase().includes(q)) return false;
+        }
+        return true;
+      });
+    }
+
+    function renderKPIsAndBanner(filtered) {
+      const totalCases = filtered.length;
+      const plusItems = filtered.filter(d => d.selisih > 0);
+      const minusItems = filtered.filter(d => d.selisih < 0);
+      const totalPlus = plusItems.reduce((s, d) => s + d.selisih, 0);
+      const totalMinus = minusItems.reduce((s, d) => s + d.selisih, 0);
+      const netAmount = totalPlus + totalMinus;
+      const absAmount = totalPlus + Math.abs(totalMinus);
+
+      document.getElementById('kpi-total-cases').textContent = totalCases;
+      document.getElementById('kpi-cases-sub').textContent = `${plusItems.length} Lebih (+) • ${minusItems.length} Kurang (-)`;
+
+      const netEl = document.getElementById('kpi-net-amount');
+      const netBadge = document.getElementById('kpi-net-badge');
+      netEl.textContent = formatRupiah(netAmount, true);
+      if (netAmount > 0) {
+        netEl.className = 'text-2xl sm:text-3xl font-extrabold text-purple-700 dark:text-purple-400';
+        netBadge.textContent = 'Surplus (+)';
+        netBadge.className = 'px-2 py-0.5 rounded-full text-[11px] font-bold bg-purple-100 text-purple-800 dark:bg-purple-950 dark:text-purple-300';
+      } else if (netAmount < 0) {
+        netEl.className = 'text-2xl sm:text-3xl font-extrabold text-rose-600 dark:text-rose-400';
+        netBadge.textContent = 'Defisit (-)';
+        netBadge.className = 'px-2 py-0.5 rounded-full text-[11px] font-bold bg-rose-50 text-rose-700 dark:bg-rose-950 dark:text-rose-300';
+      } else {
+        netEl.className = 'text-2xl sm:text-3xl font-extrabold text-slate-700 dark:text-slate-200';
+        netBadge.textContent = 'Imbang';
+        netBadge.className = 'px-2 py-0.5 rounded-full text-[11px] font-bold bg-slate-100 text-slate-600';
+      }
+
+      document.getElementById('kpi-abs-amount').textContent = formatRupiah(absAmount);
+      document.getElementById('kpi-plus-amount').textContent = formatRupiah(totalPlus, true);
+      document.getElementById('kpi-minus-amount').textContent = formatRupiah(totalMinus);
+
+      const plusPct = absAmount > 0 ? Math.round((totalPlus / absAmount) * 100) : 50;
+      document.getElementById('kpi-ratio-bar').style.width = `${plusPct}%`;
+
+      // Executive Banner Summary
+      const outletCounts = {};
+      const catCounts = {};
+      filtered.forEach(d => {
+        outletCounts[d.outlet] = (outletCounts[d.outlet] || 0) + 1;
+        catCounts[d.kategori] = (catCounts[d.kategori] || 0) + 1;
+      });
+      const topOutletEntry = Object.entries(outletCounts).sort((a, b) => b[1] - a[1])[0];
+      const topCatEntry = Object.entries(catCounts).sort((a, b) => b[1] - a[1])[0];
+
+      document.getElementById('highlight-top-outlet').textContent = topOutletEntry
+        ? `${topOutletEntry[0]} (${topOutletEntry[1]} kasus)`
+        : '-';
+      document.getElementById('highlight-top-cat').textContent = topCatEntry
+        ? `${topCatEntry[0]} (${topCatEntry[1]}x)`
+        : '-';
+
+      let periodText = 'Periode Januari – Desember 2026';
+      if (appState.filters.tglMulai || appState.filters.tglAkhir) {
+        const s = appState.filters.tglMulai ? formatISOToIndoDate(appState.filters.tglMulai) : 'Awal';
+        const e = appState.filters.tglAkhir ? formatISOToIndoDate(appState.filters.tglAkhir) : 'Akhir';
+        periodText = `${s} s/d ${e}`;
+      } else if (appState.filters.bulan !== 'ALL') {
+        periodText = `Bulan ${appState.filters.bulan} 2026`;
+      }
+      document.getElementById('summary-period-label').textContent = periodText;
+
+      if (totalCases === 0) {
+        document.getElementById('executive-headline').textContent = 'Tidak ada data selisih yang cocok dengan filter saat ini.';
+      } else {
+        const statusDesc = netAmount < 0
+          ? `mengalami selisih kurang bersih sebesar ${formatRupiah(Math.abs(netAmount))}`
+          : `mencatat selisih lebih bersih sebesar ${formatRupiah(netAmount)}`;
+        document.getElementById('executive-headline').innerHTML =
+          `Tercatat <b>${totalCases} kejadian selisih</b> dan secara keseluruhan ${statusDesc}. Fokus perbaikan utama ada pada masalah <b>${topCatEntry ? topCatEntry[0] : '-'}</b>.`;
+      }
+
+      document.getElementById('outlet-count-badge').textContent = getAllOutlets().length;
+      document.getElementById('log-count-badge').textContent = totalCases;
+    }
+
+    function renderCharts(filtered) {
+      const isDark = window.matchMedia && window.matchMedia('(prefers-color-scheme: dark)').matches;
+      const textColor = isDark ? '#cbd5e1' : '#475569';
+      const gridColor = isDark ? 'rgba(148, 163, 184, 0.1)' : 'rgba(148, 163, 184, 0.2)';
+
+      // 1. Monthly Chart (Lengkap Januari - Desember)
+      const activeMonths = [
+        'JANUARI', 'FEBRUARI', 'MARET', 'APRIL', 'MEI', 'JUNI',
+        'JULI', 'AGUSTUS', 'SEPTEMBER', 'OKTOBER', 'NOVEMBER', 'DESEMBER'
+      ];
+      const mPlus = activeMonths.map(m => filtered.filter(d => d.bulan === m && d.selisih > 0).reduce((s, d) => s + d.selisih, 0));
+      const mMinus = activeMonths.map(m => filtered.filter(d => d.bulan === m && d.selisih < 0).reduce((s, d) => s + Math.abs(d.selisih), 0));
+
+      if (appState.charts.monthly) appState.charts.monthly.destroy();
+      appState.charts.monthly = new Chart(document.getElementById('chart-monthly'), {
+        type: 'bar',
+        data: {
+          labels: activeMonths,
+          datasets: [
+            { label: 'Uang Lebih (+)', data: mPlus, backgroundColor: '#7e22ce', borderRadius: 6 },
+            { label: 'Uang Kurang (-)', data: mMinus, backgroundColor: '#f43f5e', borderRadius: 6 }
+          ]
+        },
+        options: {
+          responsive: true,
+          maintainAspectRatio: false,
+          plugins: { legend: { labels: { color: textColor, font: { family: 'Inter', size: 11 } } } },
+          scales: {
+            x: { ticks: { color: textColor }, grid: { display: false } },
+            y: { ticks: { color: textColor }, grid: { color: gridColor } }
+          }
+        }
+      });
+
+      // 2. Top 10 Outlets Chart
+      const outletMap = {};
+      filtered.forEach(d => { outletMap[d.outlet] = (outletMap[d.outlet] || 0) + 1; });
+      const topOutlets = Object.entries(outletMap).sort((a, b) => b[1] - a[1]).slice(0, 10);
+
+      if (appState.charts.outlets) appState.charts.outlets.destroy();
+      appState.charts.outlets = new Chart(document.getElementById('chart-outlets'), {
+        type: 'bar',
+        data: {
+          labels: topOutlets.map(o => o[0]),
+          datasets: [{
+            label: 'Jumlah Kasus Selisih',
+            data: topOutlets.map(o => o[1]),
+            backgroundColor: '#9333ea',
+            borderRadius: 6
+          }]
+        },
+        options: {
+          indexAxis: 'y',
+          responsive: true,
+          maintainAspectRatio: false,
+          plugins: { legend: { display: false } },
+          scales: {
+            x: { ticks: { color: textColor, stepSize: 1 }, grid: { color: gridColor } },
+            y: { ticks: { color: textColor, font: { weight: 'bold' } }, grid: { display: false } }
+          }
+        }
+      });
+
+      // 3. Categories Doughnut
+      const catMap = {};
+      filtered.forEach(d => { catMap[d.kategori] = (catMap[d.kategori] || 0) + 1; });
+      const topCats = Object.entries(catMap).sort((a, b) => b[1] - a[1]);
+
+      if (appState.charts.categories) appState.charts.categories.destroy();
+      appState.charts.categories = new Chart(document.getElementById('chart-categories'), {
+        type: 'doughnut',
+        data: {
+          labels: topCats.map(c => c[0]),
+          datasets: [{
+            data: topCats.map(c => c[1]),
+            backgroundColor: ['#6b21a8', '#a855f7', '#ec4899', '#f59e0b', '#6366f1', '#ef4444', '#c084fc', '#64748b'],
+            borderWidth: 0
+          }]
+        },
+        options: {
+          responsive: true,
+          maintainAspectRatio: false,
+          cutout: '62%',
+          plugins: {
+            legend: { position: 'right', labels: { color: textColor, boxWidth: 12, font: { size: 11 } } }
+          }
+        }
+      });
+
+      // 4. Payment Methods Bar
+      const metMap = {};
+      filtered.forEach(d => { metMap[d.metode] = (metMap[d.metode] || 0) + 1; });
+      const topMets = Object.entries(metMap).sort((a, b) => b[1] - a[1]);
+
+      if (appState.charts.methods) appState.charts.methods.destroy();
+      appState.charts.methods = new Chart(document.getElementById('chart-methods'), {
+        type: 'bar',
+        data: {
+          labels: topMets.map(m => m[0]),
+          datasets: [{
+            label: 'Kejadian',
+            data: topMets.map(m => m[1]),
+            backgroundColor: '#a855f7',
+            borderRadius: 6
+          }]
+        },
+        options: {
+          responsive: true,
+          maintainAspectRatio: false,
+          plugins: { legend: { display: false } },
+          scales: {
+            x: { ticks: { color: textColor, font: { size: 10 } }, grid: { display: false } },
+            y: { ticks: { color: textColor, stepSize: 1 }, grid: { color: gridColor } }
+          }
+        }
+      });
+    }
+
+    function renderCrewTable(filtered) {
+      const crewMap = {};
+      filtered.forEach(d => {
+        if (!crewMap[d.crewstore]) {
+          crewMap[d.crewstore] = { name: d.crewstore, outlets: new Set(), count: 0, net: 0, abs: 0 };
+        }
+        crewMap[d.crewstore].outlets.add(d.outlet);
+        crewMap[d.crewstore].count += 1;
+        crewMap[d.crewstore].net += d.selisih;
+        crewMap[d.crewstore].abs += Math.abs(d.selisih);
+      });
+
+      const list = Object.values(crewMap).sort((a, b) => b.count - a.count || b.abs - a.abs);
+      const tbody = document.getElementById('crew-table-body');
+      if (list.length === 0) {
+        tbody.innerHTML = `<tr><td colspan="7" class="py-8 text-center text-slate-400">Tidak ada data crewstore untuk filter ini.</td></tr>`;
+        return;
+      }
+
+      tbody.innerHTML = list.map((c, idx) => {
+        const riskBadge = c.count >= 6 || c.abs >= 250000
+          ? `<span class="px-2.5 py-0.5 rounded-full text-[11px] font-bold bg-rose-100 text-rose-700 dark:bg-rose-950 dark:text-rose-300">Prioritas Evaluasi</span>`
+          : (c.count >= 3
+            ? `<span class="px-2.5 py-0.5 rounded-full text-[11px] font-bold bg-amber-100 text-amber-700 dark:bg-amber-950 dark:text-amber-300">Perlu Pembinaan</span>`
+            : `<span class="px-2.5 py-0.5 rounded-full text-[11px] font-bold bg-purple-100 text-purple-800 dark:bg-purple-950 dark:text-purple-300">Terkendali</span>`);
+
+        return `
+          <tr onclick="filterByCrew('${c.name.replace(/'/g, "\\'")}')" class="hover:bg-purple-50/50 dark:hover:bg-slate-800/60 cursor-pointer transition">
+            <td class="py-3 px-3 font-bold text-slate-400">#${idx + 1}</td>
+            <td class="py-3 px-3 font-bold text-slate-900 dark:text-white">${c.name}</td>
+            <td class="py-3 px-3 text-xs font-semibold text-slate-500">${Array.from(c.outlets).join(', ')}</td>
+            <td class="py-3 px-3 text-center"><span class="px-2.5 py-0.5 rounded-lg bg-purple-50 dark:bg-slate-800 text-purple-900 dark:text-purple-200 font-bold">${c.count}x</span></td>
+            <td class="py-3 px-3 text-right font-bold ${c.net < 0 ? 'text-rose-600' : 'text-purple-700'}">${formatRupiah(c.net, true)}</td>
+            <td class="py-3 px-3 text-right font-semibold text-slate-700 dark:text-slate-300">${formatRupiah(c.abs)}</td>
+            <td class="py-3 px-3 text-center">${riskBadge}</td>
+          </tr>
+        `;
+      }).join('');
+    }
+
+    function renderOutletCards(filtered) {
+      const allOutlets = getAllOutlets();
+      const grid = document.getElementById('outlet-cards-grid');
+
+      const stats = allOutlets.map(code => {
+        const items = filtered.filter(d => d.outlet === code);
+        const net = items.reduce((s, d) => s + d.selisih, 0);
+        const abs = items.reduce((s, d) => s + Math.abs(d.selisih), 0);
+        return { code, count: items.length, net, abs };
+      }).sort((a, b) => b.count - a.count || a.code.localeCompare(b.code));
+
+      grid.innerHTML = stats.map(o => {
+        const statusColor = o.count === 0
+          ? 'border-purple-200 dark:border-purple-900/60'
+          : (o.count >= 10 ? 'border-rose-300 dark:border-rose-900' : 'border-purple-100 dark:border-slate-800');
+        const badge = o.count === 0
+          ? `<span class="px-2 py-0.5 rounded-full text-[10px] font-bold bg-purple-100 text-purple-800 dark:bg-purple-950 dark:text-purple-300">0 Kasus</span>`
+          : (o.count >= 10
+            ? `<span class="px-2 py-0.5 rounded-full text-[10px] font-bold bg-rose-100 text-rose-700 dark:bg-rose-950 dark:text-rose-300">Tinggi (${o.count})</span>`
+            : `<span class="px-2 py-0.5 rounded-full text-[10px] font-bold bg-amber-50 text-amber-700 dark:bg-amber-950 dark:text-amber-300">${o.count} Kasus</span>`);
+
+        return `
+          <div onclick="selectOutletFromCard('${o.code}')" class="bg-white dark:bg-slate-900 rounded-2xl p-4 border ${statusColor} shadow-sm hover:shadow-md hover:border-purple-600 cursor-pointer transition">
+            <div class="flex items-center justify-between">
+              <div class="flex items-center gap-2.5">
+                <div class="w-9 h-9 rounded-xl bg-purple-100 dark:bg-slate-800 flex items-center justify-center font-extrabold text-sm text-purple-900 dark:text-white">${o.code}</div>
+                <div>
+                  <h4 class="text-sm font-bold text-slate-900 dark:text-white">Outlet ${o.code}</h4>
+                  <span class="text-[11px] text-slate-400">Klik untuk audit outlet</span>
+                </div>
+              </div>
+              ${badge}
+            </div>
+            <div class="mt-4 pt-3 border-t border-purple-100/70 dark:border-slate-800 flex items-center justify-between text-xs">
+              <div>
+                <span class="block text-slate-400 text-[10px] uppercase">Selisih Bersih</span>
+                <span class="font-bold ${o.net < 0 ? 'text-rose-600' : (o.net > 0 ? 'text-purple-700' : 'text-slate-500')}">${formatRupiah(o.net, true)}</span>
+              </div>
+              <div class="text-right">
+                <span class="block text-slate-400 text-[10px] uppercase">Total Kesalahan</span>
+                <span class="font-bold text-slate-700 dark:text-slate-200">${formatRupiah(o.abs)}</span>
+              </div>
+            </div>
+          </div>
+        `;
+      }).join('');
+    }
+
+    function renderLogsTable(filtered) {
+      const sorted = [...filtered].sort((a, b) => {
+        const dir = appState.sort.dir === 'asc' ? 1 : -1;
+        const f = appState.sort.field;
+        if (f === 'id' || f === 'selisih') return (a[f] - b[f]) * dir;
+        return String(a[f]).localeCompare(String(b[f])) * dir;
+      });
+
+      const total = sorted.length;
+      const perPage = appState.pagination.perPage;
+      const totalPages = Math.max(1, Math.ceil(total / perPage));
+      if (appState.pagination.page > totalPages) appState.pagination.page = totalPages;
+
+      const start = (appState.pagination.page - 1) * perPage;
+      const slice = sorted.slice(start, start + perPage);
+
+      document.getElementById('pagination-info').textContent = total === 0
+        ? 'Menampilkan 0 data'
+        : `Menampilkan ${start + 1} - ${Math.min(start + perPage, total)} dari ${total} kejadian`;
+      document.getElementById('page-indicator').textContent = `Halaman ${appState.pagination.page} / ${totalPages}`;
+      document.getElementById('prev-page-btn').disabled = appState.pagination.page <= 1;
+      document.getElementById('next-page-btn').disabled = appState.pagination.page >= totalPages;
+
+      const tbody = document.getElementById('logs-table-body');
+      if (slice.length === 0) {
+        tbody.innerHTML = `<tr><td colspan="7" class="py-8 text-center text-slate-400">Tidak ada transaksi selisih ditemukan.</td></tr>`;
+        return;
+      }
+
+      tbody.innerHTML = slice.map(row => `
+        <tr onclick="openDetailModal(${row.id})" title="Klik untuk melihat detail audit transaksi" class="hover:bg-purple-50/50 dark:hover:bg-slate-800/70 cursor-pointer transition group">
+          <td class="py-3 px-3 font-semibold text-slate-400 group-hover:text-purple-700">${row.id}</td>
+          <td class="py-3 px-3 whitespace-nowrap font-medium text-slate-700 dark:text-slate-300">${row.tgl}</td>
+          <td class="py-3 px-3"><span class="px-2 py-0.5 rounded-lg bg-purple-50 dark:bg-slate-800 text-purple-900 dark:text-purple-200 font-bold text-xs">${row.outlet}</span></td>
+          <td class="py-3 px-3 font-semibold text-slate-900 dark:text-white group-hover:text-purple-700 dark:group-hover:text-purple-400">${row.crewstore}</td>
+          <td class="py-3 px-3 text-right whitespace-nowrap font-extrabold ${row.selisih < 0 ? 'text-rose-600' : 'text-purple-700'}">${formatRupiah(row.selisih, true)}</td>
+          <td class="py-3 px-3">
+            <div class="flex items-center justify-between gap-2">
+              <div>
+                <span class="inline-block px-2 py-0.5 rounded-md text-[10px] font-bold bg-purple-100 text-purple-800 dark:bg-purple-950 dark:text-purple-300 mb-0.5">${row.kategori}</span>
+                <p class="text-xs text-slate-600 dark:text-slate-300 leading-snug">${row.keterangan}</p>
+              </div>
+              <span class="shrink-0 px-2.5 py-1 rounded-lg bg-purple-50 dark:bg-slate-800 text-purple-700 dark:text-slate-300 group-hover:bg-purple-700 group-hover:text-white text-[11px] font-bold transition no-print">
+                Detail
+              </span>
+            </div>
+          </td>
+          <td class="py-3 px-3 whitespace-nowrap text-xs font-semibold text-slate-500">${row.metode}</td>
+        </tr>
+      `).join('');
+    }
+
+    function renderAll() {
+      const filtered = getFilteredData();
+      renderKPIsAndBanner(filtered);
+      renderCharts(filtered);
+      renderCrewTable(filtered);
+      renderOutletCards(filtered);
+      renderLogsTable(filtered);
+      renderMasterTables();
+    }
+
+    // Master Data Management: Outlets & Employees
+    function renderMasterTables() {
+      const outletTbody = document.getElementById('master-outlet-tbody');
+      const crewTbody = document.getElementById('master-crew-tbody');
+      if (!outletTbody || !crewTbody) return;
+
+      // 1. Render Outlet Master Table
+      const allOutlets = getAllOutlets();
+      outletTbody.innerHTML = allOutlets.map((code, idx) => {
+        const count = appState.data.filter(d => d.outlet === code).length;
+        const isEditing = appState.editingOutlet === code;
+
+        if (isEditing) {
+          return `
+            <tr class="bg-purple-50/70 dark:bg-purple-950/30">
+              <td class="py-2.5 px-3 font-semibold text-slate-400">${idx + 1}</td>
+              <td class="py-2.5 px-3" colspan="2">
+                <input type="text" id="edit-outlet-input" value="${code}" maxlength="12" class="w-full rounded-lg border border-purple-400 bg-white dark:bg-slate-800 px-2.5 py-1 text-xs font-bold uppercase focus:outline-none focus:ring-2 focus:ring-purple-600" />
+              </td>
+              <td class="py-2.5 px-3 text-right whitespace-nowrap space-x-1">
+                <button type="button" onclick="saveOutletEdit('${code}')" class="px-2.5 py-1 rounded-lg bg-purple-700 hover:bg-purple-800 text-white text-[11px] font-bold">Simpan</button>
+                <button type="button" onclick="cancelOutletEdit()" class="px-2 py-1 rounded-lg bg-slate-200 dark:bg-slate-700 text-slate-700 dark:text-slate-200 text-[11px] font-semibold">Batal</button>
+              </td>
+            </tr>
+          `;
+        }
+
+        return `
+          <tr class="hover:bg-purple-50/40 dark:hover:bg-slate-800/50 transition">
+            <td class="py-2.5 px-3 font-semibold text-slate-400">${idx + 1}</td>
+            <td class="py-2.5 px-3 font-extrabold text-slate-900 dark:text-white">${code}</td>
+            <td class="py-2.5 px-3 text-center">
+              <span class="px-2 py-0.5 rounded-md bg-purple-50 dark:bg-slate-800 text-purple-900 dark:text-purple-200 text-xs font-semibold">${count}</span>
+            </td>
+            <td class="py-2.5 px-3 text-right whitespace-nowrap space-x-1">
+              <button type="button" onclick="startOutletEdit('${code}')" class="px-2.5 py-1 rounded-lg bg-purple-50 hover:bg-purple-100 text-purple-800 dark:bg-purple-950/70 dark:text-purple-300 border border-purple-200/70 dark:border-purple-800 text-[11px] font-bold transition">
+                Edit
+              </button>
+              ${count === 0 ? `<button type="button" onclick="deleteEmptyOutlet('${code}')" class="px-2 py-1 rounded-lg bg-rose-50 hover:bg-rose-100 text-rose-600 dark:bg-rose-950/70 dark:text-rose-300 text-[11px] font-bold transition" title="Hapus outlet kosong">✕</button>` : ''}
+            </td>
+          </tr>
+        `;
+      }).join('');
+
+      // 2. Render Crewstore Master Table
+      const crewSearch = (document.getElementById('master-crew-search')?.value || '').toLowerCase().trim();
+      const crewMap = {};
+      appState.data.forEach(d => {
+        if (!crewMap[d.crewstore]) {
+          crewMap[d.crewstore] = { name: d.crewstore, outlets: new Set(), count: 0 };
+        }
+        crewMap[d.crewstore].outlets.add(d.outlet);
+        crewMap[d.crewstore].count += 1;
+      });
+
+      const crewList = Object.values(crewMap)
+        .filter(c => !crewSearch || c.name.toLowerCase().includes(crewSearch))
+        .sort((a, b) => a.name.localeCompare(b.name));
+
+      if (crewList.length === 0) {
+        crewTbody.innerHTML = `<tr><td colspan="5" class="py-6 text-center text-slate-400">Nama karyawan tidak ditemukan.</td></tr>`;
+        return;
+      }
+
+      crewTbody.innerHTML = crewList.map((c, idx) => {
+        const isEditing = appState.editingCrew === c.name;
+        const escapedName = c.name.replace(/\\/g, '\\\\').replace(/'/g, "\\'");
+        const safeAttrName = c.name.replace(/"/g, '&quot;');
+
+        if (isEditing) {
+          return `
+            <tr class="bg-purple-50/70 dark:bg-purple-950/30">
+              <td class="py-2.5 px-3 font-semibold text-slate-400">${idx + 1}</td>
+              <td class="py-2.5 px-3" colspan="3">
+                <input type="text" id="edit-crew-input" value="${safeAttrName}" class="w-full rounded-lg border border-purple-400 bg-white dark:bg-slate-800 px-2.5 py-1 text-xs font-bold focus:outline-none focus:ring-2 focus:ring-purple-600" />
+              </td>
+              <td class="py-2.5 px-3 text-right whitespace-nowrap space-x-1">
+                <button type="button" onclick="saveCrewEdit('${escapedName}')" class="px-2.5 py-1 rounded-lg bg-purple-700 hover:bg-purple-800 text-white text-[11px] font-bold">Simpan</button>
+                <button type="button" onclick="cancelCrewEdit()" class="px-2 py-1 rounded-lg bg-slate-200 dark:bg-slate-700 text-slate-700 dark:text-slate-200 text-[11px] font-semibold">Batal</button>
+              </td>
+            </tr>
+          `;
+        }
+
+        return `
+          <tr class="hover:bg-purple-50/40 dark:hover:bg-slate-800/50 transition">
+            <td class="py-2.5 px-3 font-semibold text-slate-400">${idx + 1}</td>
+            <td class="py-2.5 px-3 font-bold text-slate-900 dark:text-white">${c.name}</td>
+            <td class="py-2.5 px-3 text-xs text-slate-500 font-semibold">${Array.from(c.outlets).join(', ')}</td>
+            <td class="py-2.5 px-3 text-center">
+              <span class="px-2 py-0.5 rounded-md bg-purple-50 dark:bg-slate-800 text-purple-900 dark:text-purple-200 text-xs font-semibold">${c.count}</span>
+            </td>
+            <td class="py-2.5 px-3 text-right whitespace-nowrap">
+              <button type="button" onclick="startCrewEdit('${escapedName}')" class="px-2.5 py-1 rounded-lg bg-purple-50 hover:bg-purple-100 text-purple-800 dark:bg-purple-950/70 dark:text-purple-300 border border-purple-200/70 dark:border-purple-800 text-[11px] font-bold transition">
+                Ubah Nama
+              </button>
+            </td>
+          </tr>
+        `;
+      }).join('');
+    }
+
+    function handleInlineAddOutlet(e) {
+      e.preventDefault();
+      const input = document.getElementById('inline-new-outlet');
+      const code = input.value.trim().toUpperCase().replace(/[^A-Z0-9\s-]/g, '');
+      if (!code) return;
+      if (!getAllOutlets().includes(code)) {
+        appState.customOutlets.push(code);
+        saveStoredState();
+        populateFilterOptions();
+        renderAll();
+        showToast(`Outlet baru "${code}" berhasil ditambahkan!`);
+      } else {
+        showToast(`Outlet "${code}" sudah ada dalam daftar`, true);
+      }
+      input.value = '';
+    }
+
+    function startOutletEdit(code) {
+      appState.editingOutlet = code;
+      renderMasterTables();
+      const inp = document.getElementById('edit-outlet-input');
+      if (inp) { inp.focus(); inp.select(); }
+    }
+
+    function cancelOutletEdit() {
+      appState.editingOutlet = null;
+      renderMasterTables();
+    }
+
+    function saveOutletEdit(oldCode) {
+      const inp = document.getElementById('edit-outlet-input');
+      if (!inp) return;
+      const newCode = inp.value.trim().toUpperCase().replace(/[^A-Z0-9\s-]/g, '');
+      if (!newCode) {
+        showToast('Nama/kode outlet tidak boleh kosong', true);
+        return;
+      }
+      if (newCode !== oldCode) {
+        appState.data.forEach(d => {
+          if (d.outlet === oldCode) d.outlet = newCode;
+        });
+        appState.customOutlets = appState.customOutlets.map(o => (o === oldCode ? newCode : o));
+        if (!appState.customOutlets.includes(newCode)) {
+          appState.customOutlets.push(newCode);
+        }
+        if (appState.filters.outlet === oldCode) {
+          appState.filters.outlet = newCode;
+        }
+        saveStoredState();
+        populateFilterOptions();
+        showToast(`Outlet "${oldCode}" diubah menjadi "${newCode}"`);
+      }
+      appState.editingOutlet = null;
+      renderAll();
+    }
+
+    function deleteEmptyOutlet(code) {
+      appState.customOutlets = appState.customOutlets.filter(o => o !== code);
+      if (appState.filters.outlet === code) appState.filters.outlet = 'ALL';
+      saveStoredState();
+      populateFilterOptions();
+      renderAll();
+      showToast(`Outlet "${code}" dihapus`);
+    }
+
+    function startCrewEdit(name) {
+      appState.editingCrew = name;
+      renderMasterTables();
+      const inp = document.getElementById('edit-crew-input');
+      if (inp) { inp.focus(); inp.select(); }
+    }
+
+    function cancelCrewEdit() {
+      appState.editingCrew = null;
+      renderMasterTables();
+    }
+
+    function saveCrewEdit(oldName) {
+      const inp = document.getElementById('edit-crew-input');
+      if (!inp) return;
+      const newName = inp.value.trim();
+      if (!newName) {
+        showToast('Nama karyawan tidak boleh kosong', true);
+        return;
+      }
+      if (newName !== oldName) {
+        let updatedCount = 0;
+        appState.data.forEach(d => {
+          if (d.crewstore === oldName) {
+            d.crewstore = newName;
+            updatedCount++;
+          }
+        });
+        saveStoredState();
+        showToast(`Nama "${oldName}" diperbarui menjadi "${newName}" (${updatedCount} transaksi)`);
+      }
+      appState.editingCrew = null;
+      renderAll();
+    }
+
+    // Navigation & Interaction Handlers
+    function switchTab(tabName) {
+      appState.activeTab = tabName;
+      document.querySelectorAll('.tab-panel').forEach(p => p.classList.add('hidden'));
+      document.getElementById(`tab-${tabName}`).classList.remove('hidden');
+
+      document.querySelectorAll('.tab-btn').forEach(btn => {
+        btn.className = 'tab-btn flex-1 sm:flex-none px-4 py-2.5 rounded-xl text-xs sm:text-sm font-semibold text-slate-600 dark:text-slate-300 hover:bg-purple-50 dark:hover:bg-slate-800 transition';
+      });
+      document.getElementById(`tab-btn-${tabName}`).className = 'tab-btn flex-1 sm:flex-none px-4 py-2.5 rounded-xl text-xs sm:text-sm font-bold bg-purple-700 text-white shadow-sm transition';
+    }
+
+    function filterByCrew(name) {
+      appState.filters.search = name;
+      document.getElementById('filter-search').value = name;
+      switchTab('logs');
+      appState.pagination.page = 1;
+      renderAll();
+      showToast(`Menampilkan log selisih: ${name}`);
+    }
+
+    function selectOutletFromCard(code) {
+      appState.filters.outlet = code;
+      document.getElementById('filter-outlet').value = code;
+      appState.activePreset = '';
+      updateQuickChipStyles();
+      appState.pagination.page = 1;
+      switchTab('logs');
+      renderAll();
+      showToast(`Menampilkan detail log audit untuk Outlet ${code}`);
+    }
+
+    function sortLogs(field) {
+      if (appState.sort.field === field) {
+        appState.sort.dir = appState.sort.dir === 'asc' ? 'desc' : 'asc';
+      } else {
+        appState.sort.field = field;
+        appState.sort.dir = 'asc';
+      }
+      renderLogsTable(getFilteredData());
+    }
+
+    function changePage(delta) {
+      appState.pagination.page += delta;
+      renderLogsTable(getFilteredData());
+    }
+
+    function changePerPage(val) {
+      appState.pagination.perPage = parseInt(val, 10);
+      appState.pagination.page = 1;
+      renderLogsTable(getFilteredData());
+    }
+
+    // Modals: Create Outlet & Add Record
+    function openOutletModal() {
+      document.getElementById('modal-outlet').classList.remove('hidden');
+      document.getElementById('new-outlet-code').focus();
+    }
+    function closeOutletModal() {
+      document.getElementById('modal-outlet').classList.add('hidden');
+    }
+
+    function handleAddOutlet(e) {
+      e.preventDefault();
+      const input = document.getElementById('new-outlet-code');
+      const code = input.value.trim().toUpperCase().replace(/[^A-Z0-9]/g, '');
+      if (!code) return;
+      if (!getAllOutlets().includes(code)) {
+        appState.customOutlets.push(code);
+        saveStoredState();
+        populateFilterOptions();
+        renderAll();
+        showToast(`Outlet baru "${code}" berhasil dibuat!`);
+      } else {
+        showToast(`Outlet "${code}" sudah terdaftar`, true);
+      }
+      input.value = '';
+      closeOutletModal();
+    }
+
+    function openAddModal() {
+      document.getElementById('modal-add').classList.remove('hidden');
+    }
+    function closeAddModal() {
+      document.getElementById('modal-add').classList.add('hidden');
+    }
+
+    function openDetailModal(recordId) {
+      const item = appState.data.find(d => d.id === recordId);
+      if (!item) return;
+
+      document.getElementById('detail-record-badge').textContent = `Record #${item.id}`;
+      document.getElementById('detail-tgl').textContent = item.tgl || '-';
+      document.getElementById('detail-minggu').textContent = item.minggu || `Periode Bulan ${item.bulan}`;
+
+      const selisihEl = document.getElementById('detail-selisih');
+      const descEl = document.getElementById('detail-selisih-desc');
+      selisihEl.textContent = formatRupiah(item.selisih, true);
+
+      if (item.selisih > 0) {
+        selisihEl.className = 'text-xl sm:text-2xl font-extrabold text-purple-700 dark:text-purple-400 mt-0.5';
+        descEl.textContent = 'Kurang Input / Lebih Uang';
+      } else if (item.selisih < 0) {
+        selisihEl.className = 'text-xl sm:text-2xl font-extrabold text-rose-600 dark:text-rose-400 mt-0.5';
+        descEl.textContent = 'Lebih Input / Kurang Setoran';
+      } else {
+        selisihEl.className = 'text-xl sm:text-2xl font-extrabold text-slate-700 dark:text-slate-200 mt-0.5';
+        descEl.textContent = 'Imbang (Rp 0)';
+      }
+
+      document.getElementById('detail-outlet').textContent = item.outlet;
+      document.getElementById('detail-metode').textContent = item.metode;
+      document.getElementById('detail-crew').textContent = item.crewstore;
+      document.getElementById('detail-kategori').textContent = item.kategori;
+      document.getElementById('detail-keterangan').textContent = item.keterangan || 'Tidak ada keterangan tambahan.';
+
+      const filterBtn = document.getElementById('detail-filter-crew-btn');
+      filterBtn.onclick = () => {
+        closeDetailModal();
+        filterByCrew(item.crewstore);
+      };
+
+      document.getElementById('modal-detail').classList.remove('hidden');
+    }
+
+    function closeDetailModal() {
+      document.getElementById('modal-detail').classList.add('hidden');
+    }
+
+    function handleAddRecord(e) {
+      e.preventDefault();
+      const bulan = document.getElementById('add-bulan').value;
+      const tgl = document.getElementById('add-tgl').value.trim().toUpperCase();
+      const outlet = document.getElementById('add-outlet').value.trim().toUpperCase();
+      const selisih = parseInt(document.getElementById('add-selisih').value, 10) || 0;
+      const crewstore = document.getElementById('add-crew').value.trim();
+      const metode = document.getElementById('add-metode').value;
+      const kategori = document.getElementById('add-kategori').value;
+      const keterangan = document.getElementById('add-ket').value.trim();
+
+      if (outlet && !getAllOutlets().includes(outlet)) {
+        appState.customOutlets.push(outlet);
+      }
+
+      const newId = appState.data.reduce((max, item) => Math.max(max, item.id), 0) + 1;
+      appState.data.push({
+        id: newId,
+        bulan,
+        minggu: 'INPUT MANUAL',
+        tgl,
+        outlet,
+        crewstore,
+        selisih,
+        keterangan,
+        metode,
+        kategori
+      });
+
+      saveStoredState();
+      populateFilterOptions();
+      renderAll();
+      e.target.reset();
+      closeAddModal();
+      showToast('Data selisih baru berhasil ditambahkan!');
+    }
+
+    function exportFilteredCSV() {
+      const filtered = getFilteredData();
+      const headers = ['No', 'Bulan', 'Tanggal', 'Outlet', 'Crewstore', 'Selisih', 'Kategori', 'Keterangan', 'Metode'];
+      const rows = filtered.map(r => [
+        r.id, r.bulan, r.tgl, r.outlet, `"${r.crewstore}"`, r.selisih, `"${r.kategori}"`, `"${r.keterangan.replace(/"/g, '""')}"`, r.metode
+      ]);
+      const csv = [headers.join(','), ...rows.map(r => r.join(','))].join('\n');
+      const blob = new Blob([csv], { type: 'text/csv;charset=utf-8;' });
+      const url = URL.createObjectURL(blob);
+      const a = document.createElement('a');
+      a.href = url;
+      a.download = `Rekap_Selisih_Crewstore_${new Date().toISOString().slice(0, 10)}.csv`;
+      a.click();
+      URL.revokeObjectURL(url);
+      showToast(`Berhasil mengunduh ${filtered.length} baris ke CSV`);
+    }
+
+    // Event Listeners on Filter Controls
+    window.addEventListener('DOMContentLoaded', () => {
+      loadStoredState();
+      populateFilterOptions();
+
+      document.getElementById('filter-bulan').addEventListener('change', (e) => {
+        appState.filters.bulan = e.target.value;
+        appState.activePreset = '';
+        updateQuickChipStyles();
+        populateFilterOptions();
+        appState.pagination.page = 1;
+        renderAll();
+      });
+
+      document.getElementById('filter-tgl-mulai').addEventListener('change', (e) => {
+        appState.filters.tglMulai = e.target.value;
+        appState.activePreset = '';
+        updateQuickChipStyles();
+        updateDateRangeBadge();
+        appState.pagination.page = 1;
+        renderAll();
+      });
+
+      document.getElementById('filter-tgl-akhir').addEventListener('change', (e) => {
+        appState.filters.tglAkhir = e.target.value;
+        appState.activePreset = '';
+        updateQuickChipStyles();
+        updateDateRangeBadge();
+        appState.pagination.page = 1;
+        renderAll();
+      });
+
+      document.getElementById('filter-outlet').addEventListener('change', (e) => {
+        appState.filters.outlet = e.target.value;
+        appState.activePreset = '';
+        updateQuickChipStyles();
+        appState.pagination.page = 1;
+        renderAll();
+      });
+
+      document.getElementById('filter-metode').addEventListener('change', (e) => {
+        appState.filters.metode = e.target.value;
+        appState.activePreset = '';
+        updateQuickChipStyles();
+        appState.pagination.page = 1;
+        renderAll();
+      });
+
+      document.getElementById('filter-kategori').addEventListener('change', (e) => {
+        appState.filters.kategori = e.target.value;
+        appState.activePreset = '';
+        updateQuickChipStyles();
+        appState.pagination.page = 1;
+        renderAll();
+      });
+
+      document.getElementById('filter-search').addEventListener('input', (e) => {
+        appState.filters.search = e.target.value;
+        appState.pagination.page = 1;
+        renderAll();
+      });
+
+      renderAll();
+    });
+  </script>
+</body>
+</html>
